@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<body>
+<table style="width: 100%">
+    <tr>
+        <th><h3>ID</h3></th>
+        <th><h3>Submission Time</h3></th>
+        <th><h3>View Number</h3></th>
+        <th><h3>Vote Number</h3></th>
+        <th><h3>Title</h3></th>
+        <th><h3>Message</h3></th>
+        <th><h3>Image</h3></th>
+    </tr>
+    {% for line in list_of_data %}
+            <tr>
+                <td>{{ list_of_data[0] }}</td>
+
+                <td>{{ list_of_data[1] }}</td>
+
+                <td>{{ list_of_data[2] }}</td>
+
+                <td>{{ list_of_data[3] }}</td>
+
+                <td><td><a href="/question/{{ list_of_data[0] }}" > {{ list_of_data[4]]}} </a></td>
+
+                <td>{{ list_of_data[5] }}</td>
+
+                <td>{{ list_of_data[6] }}</td>
+            </tr>
+        {% endfor %}
+
+</table>>
+</body>
+</html>
