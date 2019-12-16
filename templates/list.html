@@ -17,22 +17,22 @@
     </tr>
     {% for line in list_of_data %}
             <tr>
-                <td>{{ list_of_data[0] }}</td>
+                <td>{{ line[0] }}</td>
 
-                <td>{{ list_of_data[1] }}</td>
+                <td>{{ line[1] }}</td>
 
-                <td>{{ list_of_data[2] }}</td>
+                <td>{{ line[2] }}</td>
 
-                <td>{{ list_of_data[3] }}</td>
+                <td>{{ line[3] }}</td>
 
-                <td><td><a href="/question/{{ list_of_data[0] }}" > {{ list_of_data[4]]}} </a></td>
+                <td><a href="/question/{{ list_of_data[0] }}" > {{ line[4] }} </a></td>
 
-                <td>{{ list_of_data[5] }}</td>
+                <td>{{ line[5] }}</td>
 
-                <td>{{ list_of_data[6] }}</td>
+                <td><img src ="{{ line[6] }}" alt="Felt cute, might add later" width="1" height="1"></td>
             </tr>
         {% endfor %}
 
-</table>>
+</table>
 </body>
 </html>
