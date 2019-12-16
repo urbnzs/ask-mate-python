@@ -14,15 +14,10 @@ def get_all_data(filename, titles):
     return datalist
 
 def write_data(filename, updated_data, titles):
-    with open(filename, mode='w') as file:
-        file.writelines(titles.join(','))
-        file.write('\n')
-        for item in updated_data:
-            file.writelines(item.join(','))
-            file.write('\n')
+    with open(filename, "w", newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(titles)
 
+        for line in updated_data:
+            writer.writerow(line)
 
-l = get_all_data('sample_data/answer.csv', answers_titles)
-l.append(['0', '1493398154', '4', '0', 'You need to use brackets: my_list = []', ''])
-print(l)
-write_data('sample_data/answer.csv', l, answers_titles)
