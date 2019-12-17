@@ -25,7 +25,7 @@
 
                 <td>{{ line[3] }}</td>
 
-                <td><a href="/question/{{ list_of_data[0] }}" > {{ line[4] }} </a></td>
+                <td><a href="/question/{{ line[0] }}" > {{ line[4] }} </a></td>
 
                 <td>{{ line[5] }}</td>
 
@@ -34,5 +34,21 @@
         {% endfor %}
 
 </table>
+<form action="/list" method="post">
+    <p>Order By</p>
+    <select name="Order By">
+    <option value="id" name="id">ID</option>
+    <option value="submission-time" name="submission-time">Submission Time</option>
+    <option value="view-number" name="view-number">Views</option>
+    <option value="vote-number" name="vote-number">Votes</option>
+        <option value="title" name="title">Title</option>
+    </select>
+    <p>Direction</p>
+    <select name="Direction" name="Direction">
+        <option value = "asc" name="asc">Ascending</option>
+        <option value = "desc" name="desc">Descending</option>
+    </select>
+    <button type="submit" value="order_button">Order It!</button>
+</form>
 </body>
 </html>

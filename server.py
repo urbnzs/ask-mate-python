@@ -7,10 +7,15 @@ app = Flask(__name__)
 
 
 
-@app.route('/list')
+@app.route('/list', methods=['GET', 'POST'])
 def list_questions():
     titles = ["id","submission_time","view_number","vote_number","title","message","image"]
     list_of_data = connection.sort_questions(data_manager.get_all_data("sample_data/question.csv", titles))
+    if request.method == "POST":
+        order = request.form['Order By']
+        direction = request.form['Direction']
+        return redirect('/list/order_by=' + order + '&order_direction=' + direction)
+
     return render_template('list.html', list_of_data = list_of_data)
 
 @app.route('/question/<id>')
@@ -40,9 +45,20 @@ def add_new_question():
     return render_template('add_q.html')
 
 
+@app.route('/question/<id>/delete')
+def question_delete():
+    connection.delete_question(id)
+
+@app.route('/answer/<id>/delete')
+def answer_delete():
+    connection.delete_answer(id)
+
+@app.route('/list/order_by=<order>&order_direction=<direct>')
+def list_ordered(order, direct):
 
 
-
+    list_of_data = connection.sorting_questions(order, direct)
+    return render_template('list.html', list_of_data = list_of_data)
 
 
 
