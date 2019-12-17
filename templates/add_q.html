@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add a question</title>
+    <title>New Question</title>
 </head>
 <body>
-    <h1>Add a new question</h1><br>
-    <form action="/add_question" method="post">
-        #id,submission_time,view_number,vote_number,title,message,image
+    <h1>Add a New Question</h1><br>
+    <form action="/add-question" method="post">
+        <label for="title_input">Question Title:</label><br>
+        <textarea type="text" id="title_input" name="title" rows="8" cols="80" required></textarea><br>
 
+        <label for="message_input">Message:</label><br>
+        <textarea type="text" id="message_input" name="message" rows="8" cols="80" required></textarea><br>
+
+        <label for="image_input">Image Link:</label><br>
+        <textarea type="text" id="image_input" name="image" rows="8" cols="80" required></textarea><br>
+
+        <button type="submit">Add New Question</button>
     </form>
 </body>
 </html>
