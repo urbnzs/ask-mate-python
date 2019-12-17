@@ -1,10 +1,13 @@
-from flask import Flask, render_template, redirect, request
+import os
+from flask import Flask, render_template, request, redirect, url_for
+from werkzeug import secure_filename
 import connection
 import data_manager
 import time
 
 app = Flask(__name__)
 
+uploads_dir = os.path.join(app.instance_path, 'uploads')
 
 
 @app.route('/list', methods=['GET', 'POST'])
@@ -37,10 +40,11 @@ def add_new_question():
     if request.method == 'POST':
         new_question.append(request.form['title'])
         new_question.append(request.form['message'])
-        new_question.append(request.form['image'])
+        profile = request.files['image']
+        profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
         list_of_data.append(new_question)
         data_manager.write_data("sample_data/question.csv", list_of_data, titles)
-        return redirect('/question/' + id_)
+        return redirect('/question/' + str(id_))
     return render_template('add_q.html')
 
 @app.route('/question/<id>/new-answer', methods=['GET','POST'])

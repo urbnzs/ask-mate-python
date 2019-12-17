@@ -58,6 +58,34 @@ def sorting_questions(order_by, direction):
 
     return questions
 
+def voting_question(id, up):
+
+    titles= ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+    questions = data_manager.get_all_data('sample_data/question.csv', titles)
+
+    for question in questions:
+        if question[0] == id:
+            if up == False:
+                question[3] -= 1
+            else:
+                question[3] += 1
+
+    data_manager.write_data('sample_data/question.csv', questions, titles)
+
+def voting_answers(id, up):
+    titles = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+    answers = data_manager.get_all_data('sample_data/answer.csv', titles)
+
+    for answer in answers:
+        if answer[0] == id:
+            if up == False:
+                answer[2] -= 1
+            else:
+                answer[2] += 1
+
+    data_manager.write_data('sample_data/answer.csv')
+
+
 
 
 
