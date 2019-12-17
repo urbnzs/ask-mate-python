@@ -26,6 +26,7 @@ def display_question(id):
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
     question_id = id
+    connection.view_number(id)
     return render_template('display_question.html', question = question, answers = answers, question_id=question_id)
 
 @app.route('/question/<question_id>/<edit>', methods=['GET', 'POST'])
@@ -73,7 +74,8 @@ def add_new_answer(id):
     new_answer = [answer_id, submission_time, vote_num, question_id]
     if request.method == 'POST':
         new_answer.append(request.form['message'])
-        new_answer.append(request.form['image'])
+        profile = request.files['image']
+        profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
         all_answers.append(new_answer)
         data_manager.write_data("sample_data/answer.csv", all_answers, titles)
         return redirect('/question/' + str(question_id))

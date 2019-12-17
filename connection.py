@@ -91,8 +91,16 @@ def voting_answers(id, up):
             else:
                 answer[2] = str(int(answer[2]) + 1)
 
-    data_manager.write_data('sample_data/answer.csv')
+    data_manager.write_data('sample_data/answer.csv', answers, titles)
 
+def view_number(id):
+    titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+    questions = data_manager.get_all_data('sample_data/question.csv', titles)
 
+    for question in questions:
+        if question[0] == id:
+            question[2] = str(int(question[2]) +1)
+
+    data_manager.write_data('sample_data/question.csv', questions, titles)
 
 
