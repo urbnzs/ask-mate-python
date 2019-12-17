@@ -17,7 +17,8 @@ def list_questions():
 def display_question(id):
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
-    return render_template('display_question.html', question = question, answers = answers)
+    question_id = id
+    return render_template('display_question.html', question = question, answers = answers, question_id=question_id)
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_new_question():
@@ -33,12 +34,27 @@ def add_new_question():
         new_question.append(request.form['message'])
         new_question.append(request.form['image'])
         list_of_data.append(new_question)
-        print(new_question)
         data_manager.write_data("sample_data/question.csv", list_of_data, titles)
-        print(list_of_data)
-        return redirect('/question/id_')
+        return redirect('/question/' + id_)
     return render_template('add_q.html')
 
+@app.route('/question/<id>/new-answer', methods=['GET','POST'])
+def add_new_answer(id):
+    question = connection.get_question_by_id(id)
+    titles = ['id', 'submission_time', 'vote_number', 'question_id', 'message','image']
+    all_answers = data_manager.get_all_data("sample_data/answer.csv", titles)
+    answer_id = int(all_answers[-1][0]) + 1
+    submission_time = int(time.time())
+    vote_num = 0
+    question_id = id
+    new_answer = [answer_id, submission_time, vote_num, question_id]
+    if request.method == 'POST':
+        new_answer.append(request.form['message'])
+        new_answer.append(request.form['image'])
+        all_answers.append(new_answer)
+        data_manager.write_data("sample_data/answer.csv", all_answers, titles)
+        return redirect('/question/' + question_id)
+    return render_template('add_answer.html', question=question, id=id)
 
 
 
