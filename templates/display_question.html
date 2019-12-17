@@ -9,7 +9,7 @@
 <form action="/question/{{ question_id }}/delete">
     <button type="submit">Delete Question</button>
 </form>
-<div style="alignment: center width: 300px; border: 15px solid green; padding: 50px; margin: 20px; text-align: center;"><p>{{ question[5] }}</p></div>ß
+<div style="alignment: center width: 300px; border: 15px solid green; padding: 50px; margin: 20px; text-align: center;"><p>{{ question[5] }}</p></div>
 
     <table style="width: 95%">
         <tr>
@@ -24,11 +24,13 @@
             {% for item in answers %}
                 <tr>
                 {% for word in item %}
-                    <td>{{ word }}</td>
+                    <td> {{ word }}</td>
                     {% endfor %}
-                    <td><form action="/answer/{{ item[0] }}/delete">
-                        <button type="submit">Delete Answer</button>
-                    </form></td>
+<!--                    <td><form action="/answer/{{ item[0] }}/delete">-->
+<!--                        <button type="submit">Delete Answer</button>-->
+<!--                         <span>{{ item[6] }}</span>-->
+<!--                        <!–– <img src="/instance/uploads/{{ item[6] }}" alt="image"  height="100" width="100" style="alignment: right">-->
+<!--                    </form></td>-->
                 </tr>
             {% endfor %}
 

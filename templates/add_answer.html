@@ -8,13 +8,14 @@
     <h1>Add a New Answer</h1><br>
     <h2>{{ question[4] }}</h2>
     <h3>{{ question[5] }}</h3><br>
-    <form action="/question/{{ id }}/new-answer" method="post">
+    <form action="/question/{{ id }}/new-answer" method="post" enctype="multipart/form-data">
 
         <label for="message_input">Message:</label><br>
         <textarea type="text" id="message_input" name="message" rows="8" cols="80" required></textarea><br>
 
-        <label for="image_input">Image Link:</label><br>
-        <textarea type="text" id="image_input" name="image" rows="8" cols="80"></textarea><br>
+          <label for="image_input">Image:</label><br>
+        <input type="file" id="image_input" name="image" rows="8" cols="80" enctype="multipart/form-data"><br>
+        <br>
 
         <button type="sumbit">Post Answer</button>
 
