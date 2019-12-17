@@ -2,22 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New Question</title>
+    {% if edit %}
+        <title>Edit Question</title>
+    {% else %}
+        <title>Add Question</title>
+    {% endif %}
 </head>
 <body>
-    <h1>Add a New Question</h1><br>
+    {% if edit %}
+        <h1>Edit Question</h1><br>
+    {% else %}
+        <h1>Add Question</h1>
+    {% endif %}
     <form action="/add-question" method="post" enctype="multipart/form-data">
         <label for="title_input">Question Title:</label><br>
-        <textarea type="text" id="title_input" name="title" rows="8" cols="80" required></textarea><br>
+        <textarea type="text" id="title_input" name="title" rows="8" cols="80" required>{{ to_be_edited[4] if edit }}</textarea><br>
 
         <label for="message_input">Message:</label><br>
-        <textarea type="text" id="message_input" name="message" rows="8" cols="80" required></textarea><br>
+        <textarea type="text" id="message_input" name="message" rows="8" cols="80" required>{{ to_be_edited[5] if edit }}</textarea><br>
 
         <label for="image_input">Image:</label><br>
         <input type="file" id="image_input" name="image" rows="8" cols="80" enctype="multipart/form-data"></input><br>
         <br>
 
         <button type="submit" enctype="multipart/form-data">Post Question</button>
+    </form>
+    <form action="/list">
+        <button type="submit">Cancel</button>
     </form>
 </body>
 </html>

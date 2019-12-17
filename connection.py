@@ -73,9 +73,9 @@ def voting_question(id, up):
     for question in questions:
         if question[0] == id:
             if up == False:
-                question[3] -= 1
+                question[3] = str(int(question[3]) - 1)
             else:
-                question[3] += 1
+                question[3] = str(int(question[3]) + 1)
 
     data_manager.write_data('sample_data/question.csv', questions, titles)
 
@@ -86,14 +86,12 @@ def voting_answers(id, up):
     for answer in answers:
         if answer[0] == id:
             if up == False:
-                answer[2] -= 1
+                answer[2] = str(int(answer[2]) - 1)
+                inta -= 1
             else:
-                answer[2] += 1
+                answer[2] = str(int(answer[2]) + 1)
 
     data_manager.write_data('sample_data/answer.csv')
-
-
-
 
 
 
