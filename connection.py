@@ -18,12 +18,48 @@ def answers_by_id(id):
     return_list = []
     titles = ["id","submission_time","vote_number","question_id","message","image"]
     answers = data_manager.get_all_data('sample_data/answer.csv', titles)
-    print(answers)
     id_index = 3
     for answer in answers:
         if answer[id_index] == id:
             return_list.append(answer)
-    print(return_list)
 
     return return_list
+
+def delete_question(id):
+    titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+    questions = data_manager.get_all_data("sample_data/question.csv", titles)
+    return_list = []
+    for question in questions:
+        if question[0] != id:
+            return_list.append(question)
+
+    data_manager.write_data("sample_data/question.csv", return_list, titles)
+
+def delete_answer(id):
+    titles = ["id","submission_time","vote_number","question_id","message","image"]
+    answers = data_manager.get_all_data('sample_data/answer.csv', titles)
+    return_list = []
+    for answer in answers:
+        if answer[0] != id:
+            return_list.append(answer)
+
+    data_manager.write_data("sample_data/answer.csv", return_list, titles)
+
+
+def sorting_questions(order_by, direction):
+    titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+    questions = data_manager.get_all_data('sample_data/question.csv', titles)
+    title_dict = {"id": 0, "submission-time": 1, "view-number": 2, "vote-number": 3, "title": 4}
+
+    if direction == "asc":
+        questions.sort(key=lambda x: x[title_dict[order_by]], reverse=False)
+    else:
+        questions.sort(key=lambda x: x[title_dict[order_by]], reverse=True)
+
+    return questions
+
+
+
+
+
 
