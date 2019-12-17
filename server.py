@@ -11,7 +11,7 @@ uploads_dir = os.path.join(app.instance_path, 'uploads')
 
 
 @app.route('/list', methods=['GET', 'POST'])
-def list_questions(app):
+def list_questions():
     titles = ["id","submission_time","view_number","vote_number","title","message","image"]
     list_of_data = connection.sort_questions(data_manager.get_all_data("sample_data/question.csv", titles))
     if request.method == "POST":
@@ -19,13 +19,14 @@ def list_questions(app):
         direction = request.form['Direction']
         return redirect('/list/order_by=' + order + '&order_direction=' + direction)
 
-    return render_template('list.html', list_of_data = list_of_data, app = app)
+    return render_template('list.html', list_of_data = list_of_data)
 
 @app.route('/question/<id>')
 def display_question(id):
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
     question_id = id
+    connection.view_number(id)
     return render_template('display_question.html', question = question, answers = answers, question_id=question_id)
 
 @app.route('/question/<id>/edit')
