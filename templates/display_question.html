@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Question and answers</title>
+    <title>{{ question[4] }}</title>
 </head>
 <body>
-    <h1><{{ question }}/h1><br>
+<div style="text-align: center;"><h1>{{ question[4] }} </h1></div><br>
+<div style="alignment: center width: 300px; border: 15px solid green; padding: 50px; margin: 20px; text-align: center;"><p>{{ question[5] }}</p></div>
+
     <table style="width: 100%">
         <tr>
             <th><h3>ID</h3></th>
@@ -15,13 +17,15 @@
             <th><h3>Message</h3></th>
             <th><h3>Image</h3></th>
         </tr>
-        <tr>
-            {% for item in question_answer %}
+
+            {% for item in answers %}
+                <tr>
                 {% for word in item %}
-                    <td>word</td>
-                {% endfor }
+                    <td>{{ word }}</td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>
+
     </table>
 </body>
 </html>

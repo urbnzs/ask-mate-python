@@ -12,9 +12,11 @@ def list_questions():
     list_of_data = connection.sort_questions(data_manager.get_all_data("sample_data/question.csv", titles))
     return render_template('list.html', list_of_data = list_of_data)
 
-@app.route('/question/<question_id>')
-def display_question(question_id):
-    return render_template('display_question.html', question_answer = question_answer)
+@app.route('/question/<id>')
+def display_question(id):
+    question = connection.get_question_by_id(id)
+    answers = connection.answers_by_id(id)
+    return render_template('display_question.html', question = question, answers = answers)
 
 
 
