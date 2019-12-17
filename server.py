@@ -25,6 +25,7 @@ def display_question(id):
     question_id = id
     return render_template('display_question.html', question = question, answers = answers, question_id=question_id)
 
+@app.route('/question/<id>/edit')
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_new_question():
     titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
@@ -40,7 +41,7 @@ def add_new_question():
         new_question.append(request.form['image'])
         list_of_data.append(new_question)
         data_manager.write_data("sample_data/question.csv", list_of_data, titles)
-        return redirect('/question/' + id_)
+        return redirect('/question/' + str(id_))
     return render_template('add_q.html')
 
 @app.route('/question/<id>/new-answer', methods=['GET','POST'])
@@ -58,16 +59,22 @@ def add_new_answer(id):
         new_answer.append(request.form['image'])
         all_answers.append(new_answer)
         data_manager.write_data("sample_data/answer.csv", all_answers, titles)
-        return redirect('/question/' + question_id)
+        return redirect('/question/' + str(question_id))
     return render_template('add_answer.html', question=question, id=id)
 
 @app.route('/question/<id>/delete')
-def question_delete():
+def question_delete(id):
     connection.delete_question(id)
+    connection.delete_answer(id, True)
+    return redirect('/list')
 
 @app.route('/answer/<id>/delete')
-def answer_delete():
+def answer_delete(id):
+    answer_to_delete = connection.answers_by_id(id, False)
+    question_id = answer_to_delete[0][3]
     connection.delete_answer(id)
+    return redirect('/question/' + str(question_id))
+
 
 @app.route('/list/order_by=<order>&order_direction=<direct>')
 def list_ordered(order, direct):
@@ -75,7 +82,6 @@ def list_ordered(order, direct):
 
     list_of_data = connection.sorting_questions(order, direct)
     return render_template('list.html', list_of_data = list_of_data)
-
 
 
 

@@ -14,11 +14,14 @@ def get_question_by_id(id):
             return question
 
 
-def answers_by_id(id):
+def answers_by_id(id, by_question=True):
     return_list = []
     titles = ["id","submission_time","vote_number","question_id","message","image"]
     answers = data_manager.get_all_data('sample_data/answer.csv', titles)
-    id_index = 3
+    if by_question:
+        id_index = 3
+    else:
+        id_index = 0
     for answer in answers:
         if answer[id_index] == id:
             return_list.append(answer)
@@ -35,12 +38,16 @@ def delete_question(id):
 
     data_manager.write_data("sample_data/question.csv", return_list, titles)
 
-def delete_answer(id):
+def delete_answer(id, by_question=False):
     titles = ["id","submission_time","vote_number","question_id","message","image"]
     answers = data_manager.get_all_data('sample_data/answer.csv', titles)
     return_list = []
+    if by_question:
+        index = 3
+    else:
+        index = 0
     for answer in answers:
-        if answer[0] != id:
+        if answer[index] != id:
             return_list.append(answer)
 
     data_manager.write_data("sample_data/answer.csv", return_list, titles)

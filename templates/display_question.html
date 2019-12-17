@@ -6,9 +6,12 @@
 </head>
 <body>
 <div style="text-align: center;"><h1>{{ question[4] }} </h1></div><br>
-<div style="alignment: center width: 300px; border: 15px solid green; padding: 50px; margin: 20px; text-align: center;"><p>{{ question[5] }}</p></div>
+<form action="/question/{{ question_id }}/delete">
+    <button type="submit">Delete Question</button>
+</form>
+<div style="alignment: center width: 300px; border: 15px solid green; padding: 50px; margin: 20px; text-align: center;"><p>{{ question[5] }}</p></div>ß
 
-    <table style="width: 100%">
+    <table style="width: 95%">
         <tr>
             <th><h3>ID</h3></th>
             <th><h3>Submission Time</h3></th>
@@ -23,6 +26,9 @@
                 {% for word in item %}
                     <td>{{ word }}</td>
                     {% endfor %}
+                    <td><form action="/answer/{{ item[0] }}/delete">
+                        <button type="submit">Delete Answer</button>
+                    </form></td>
                 </tr>
             {% endfor %}
 
