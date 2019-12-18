@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug import secure_filename
 import connection
 import data_manager
@@ -8,6 +8,7 @@ import time
 app = Flask(__name__)
 
 uploads_dir = os.path.join(app.instance_path, 'uploads')
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
@@ -55,8 +56,8 @@ def add_edit_question(question_id=0, edit=None):
         else:
             new_question.append(request.form['title'])
             new_question.append(request.form['message'])
-            profile = request.files['image']
-            profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
+            #profile = request.files['image']
+            #profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
             list_of_data.append(new_question)
             data_manager.write_data("sample_data/question.csv", list_of_data, titles)
             return redirect('/question/' + str(id_))
@@ -74,8 +75,8 @@ def add_new_answer(id):
     new_answer = [answer_id, submission_time, vote_num, question_id]
     if request.method == 'POST':
         new_answer.append(request.form['message'])
-        profile = request.files['image']
-        profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
+        #profile = request.files['image']
+        #profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
         all_answers.append(new_answer)
         data_manager.write_data("sample_data/answer.csv", all_answers, titles)
         return redirect('/question/' + str(question_id))
@@ -123,16 +124,6 @@ def vote_down_answer(answer_id):
     voted_answer = connection.answers_by_id(answer_id, False)
     question_id = voted_answer[0][3]
     return redirect('/question/' + str(question_id))
-
-
-
-
-
-
-
-
-
-
 
 
 
