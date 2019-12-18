@@ -1,15 +1,28 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import connection
 import data_manager
 import time
 
+
+UPLOAD_FOLDER = '/images'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+
 app = Flask(__name__)
 
 uploads_dir = os.path.join(app.instance_path, 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/', methods=['GET', 'POST'])
+def loading_page():
+    render_template('loading.html')
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
     titles = ["id","submission_time","view_number","vote_number","title","message","image"]
@@ -45,8 +58,12 @@ def add_edit_question(question_id=0, edit=None):
             edited_question = [to_be_edited[0], to_be_edited[1], to_be_edited[2], to_be_edited[3]]
             edited_question.append(request.form['title'])
             edited_question.append(request.form['message'])
-            if request.form['image']:
-                edited_question.append(request.form('image'))
+            if 'file' not in request.files:
+                return redirect(request.url)
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                return redirect(url_for('uploaded_file', filename=filename))
             else:
                 edited_question.append(to_be_edited[6])
             list_of_data[edited_question[0]] = edited_question
@@ -55,7 +72,7 @@ def add_edit_question(question_id=0, edit=None):
         else:
             new_question.append(request.form['title'])
             new_question.append(request.form['message'])
-            profile = request.files['image']
+            profile = request.files['file']
             profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
             list_of_data.append(new_question)
             data_manager.write_data("sample_data/question.csv", list_of_data, titles)
