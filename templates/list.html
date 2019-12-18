@@ -73,13 +73,19 @@
 
                 <td>{{ line[2] }}</td>
 
-                <td>{{ line[3] }}</td>
+                <td><form action="/question/{{ line[0] }}/vote-up"><button type="submit">∧</button></form>{{ line[3] }}<form action="/question/{{ line[0] }}/vote-down"><button type="submit">v</button></form></td>
 
                 <td><a href="/question/{{ line[0] }}" > {{ line[4] }} </a></td>
 
                 <td>{{ line[5] }}</td>
 
                 <td><img src ="{{ line[6] }}" alt="Felt cute, might add later" width="1" height="1"></td>
+
+                <td>
+                    <form action="/question/{{ line[0] }}/edit">
+                        <button type="submit">Edit Question</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
 
@@ -100,7 +106,7 @@
         <option value = "desc" name="desc">Descending</option>
     </select>
     <button type="submit" value="order_button">Order It!</button>
-</form>
+</form><br>
 <form action="/add-question">
     <button type="submit">Add New Question</button>
 </form>

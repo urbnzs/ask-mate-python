@@ -59,9 +59,15 @@ def sorting_questions(order_by, direction):
     title_dict = {"id": 0, "submission-time": 1, "view-number": 2, "vote-number": 3, "title": 4}
 
     if direction == "asc":
-        questions.sort(key=lambda x: x[title_dict[order_by]], reverse=False)
+        if questions[0][title_dict[order_by]].isdigit():
+            questions.sort(key=lambda x: int(x[title_dict[order_by]]), reverse=False)
+        else:
+            questions.sort(key=lambda x: x[title_dict[order_by]].title(), reverse=False)
     else:
-        questions.sort(key=lambda x: x[title_dict[order_by]], reverse=True)
+        if questions[0][title_dict[order_by]].isdigit():
+            questions.sort(key=lambda x: int(x[title_dict[order_by]]), reverse=True)
+        else:
+            questions.sort(key=lambda x: x[title_dict[order_by]].title(), reverse=True)
 
     return questions
 
@@ -73,9 +79,9 @@ def voting_question(id, up):
     for question in questions:
         if question[0] == id:
             if up == False:
-                question[3] -= 1
+                question[3] = str(int(question[3]) - 1)
             else:
-                question[3] += 1
+                question[3] = str(int(question[3]) + 1)
 
     data_manager.write_data('sample_data/question.csv', questions, titles)
 
@@ -86,9 +92,9 @@ def voting_answers(id, up):
     for answer in answers:
         if answer[0] == id:
             if up == False:
-                answer[2] -= 1
+                answer[2] = str(int(answer[2]) - 1)
             else:
-                answer[2] += 1
+                answer[2] = str(int(answer[2]) + 1)
 
     data_manager.write_data('sample_data/answer.csv', answers, titles)
 
@@ -101,8 +107,5 @@ def view_number(id):
             question[2] = str(int(question[2]) +1)
 
     data_manager.write_data('sample_data/question.csv', questions, titles)
-
-
-
 
 

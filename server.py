@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 uploads_dir = os.path.join(app.instance_path, 'uploads')
 
-
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
     titles = ["id","submission_time","view_number","vote_number","title","message","image"]
@@ -29,9 +29,9 @@ def display_question(id):
     connection.view_number(id)
     return render_template('display_question.html', question = question, answers = answers, question_id=question_id)
 
-@app.route('/question/<id>/edit')
+@app.route('/question/<question_id>/<edit>', methods=['GET', 'POST'])
 @app.route('/add-question', methods=['GET', 'POST'])
-def add_new_question():
+def add_edit_question(question_id=0, edit=None):
     titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
     list_of_data = data_manager.get_all_data("sample_data/question.csv", titles)
     id_ = int(list_of_data[-1][0]) + 1
@@ -39,15 +39,28 @@ def add_new_question():
     view_num = 0
     vote_num = 0
     new_question = [id_, submission_time, view_num, vote_num]
+    to_be_edited = connection.get_question_by_id(question_id)
     if request.method == 'POST':
-        new_question.append(request.form['title'])
-        new_question.append(request.form['message'])
-        profile = request.files['image']
-        profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
-        list_of_data.append(new_question)
-        data_manager.write_data("sample_data/question.csv", list_of_data, titles)
-        return redirect('/question/' + str(id_))
-    return render_template('add_q.html')
+        if edit:
+            edited_question = [to_be_edited[0], to_be_edited[1], to_be_edited[2], to_be_edited[3]]
+            edited_question.append(request.form['title'])
+            edited_question.append(request.form['message'])
+            if request.form['image']:
+                edited_question.append(request.form('image'))
+            else:
+                edited_question.append(to_be_edited[6])
+            list_of_data[edited_question[0]] = edited_question
+            data_manager.write_data("sample_data/question.csv", list_of_data, titles)
+            return redirect('/question' + str(edited_question[0]))
+        else:
+            new_question.append(request.form['title'])
+            new_question.append(request.form['message'])
+            profile = request.files['image']
+            profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
+            list_of_data.append(new_question)
+            data_manager.write_data("sample_data/question.csv", list_of_data, titles)
+            return redirect('/question/' + str(id_))
+    return render_template('add_q.html', edit=edit, to_be_edited=to_be_edited)
 
 @app.route('/question/<id>/new-answer', methods=['GET','POST'])
 def add_new_answer(id):
@@ -84,16 +97,32 @@ def answer_delete(id):
 
 @app.route('/list/order_by=<order>&order_direction=<direct>')
 def list_ordered(order, direct):
-
-
     list_of_data = connection.sorting_questions(order, direct)
     return render_template('list.html', list_of_data = list_of_data)
 
+@app.route('/question/<question_id>/vote-up')
+def vote_up_question(question_id):
+    connection.voting_question(question_id, True)
+    return redirect('/list')
 
+@app.route('/question/<question_id>/vote-down')
+def vote_down_question(question_id):
+    connection.voting_question(question_id, False)
+    return redirect('/list')
 
+@app.route('/answer/<answer_id>/vote-up')
+def vote_up_answer(answer_id):
+    connection.voting_answers(answer_id, True)
+    voted_answer = connection.answers_by_id(answer_id, False)
+    question_id = voted_answer[0][3]
+    return redirect('/question/' + str(question_id))
 
-
-
+@app.route('/answer/<answer_id>/vote-down')
+def vote_down_answer(answer_id):
+    connection.voting_answers(answer_id, False)
+    voted_answer = connection.answers_by_id(answer_id, False)
+    question_id = voted_answer[0][3]
+    return redirect('/question/' + str(question_id))
 
 
 
