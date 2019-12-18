@@ -112,9 +112,17 @@ def vote_down_question(question_id):
 
 @app.route('/answer/<answer_id>/vote-up')
 def vote_up_answer(answer_id):
-    connection.voting(answer_id)
-    return redirect('/')
+    connection.voting_answers(answer_id, True)
+    voted_answer = connection.answers_by_id(answer_id, False)
+    question_id = voted_answer[0][3]
+    return redirect('/question/' + str(question_id))
 
+@app.route('/answer/<answer_id>/vote-down')
+def vote_down_answer(answer_id):
+    connection.voting_answers(answer_id, False)
+    voted_answer = connection.answers_by_id(answer_id, False)
+    question_id = voted_answer[0][3]
+    return redirect('/question/' + str(question_id))
 
 
 
