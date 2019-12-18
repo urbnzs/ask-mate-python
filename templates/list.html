@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>List</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='letters.css') }}">
 </head>
 <body style="background-image: url(/static/background.jpg);">
 <body>
@@ -93,7 +94,7 @@
 
 </table>
 <form action="/list" method="post">
-    <p>Order By</p>
+    <p><h4>Order By</h4></p>
     <select name="Order By">
     <option value="id" name="id">ID</option>
     <option value="submission-time" name="submission-time">Submission Time</option>
@@ -101,11 +102,11 @@
     <option value="vote-number" name="vote-number">Votes</option>
         <option value="title" name="title">Title</option>
     </select>
-    <p>Direction</p>
+    <p><h4>Direction</h4></p>
     <select name="Direction" name="Direction">
         <option value = "asc" name="asc">Ascending</option>
         <option value = "desc" name="desc">Descending</option>
-    </select>
+    </select><br>
     <button type="submit" value="order_button">Order It!</button>
 </form><br>
 <form action="/add-question">
