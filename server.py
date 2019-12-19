@@ -44,7 +44,6 @@ def display_question(id):
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    edit = None
     titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
     list_of_data = data_manager.get_all_data("sample_data/question.csv", titles)
     id_ = int(list_of_data[-1][0]) + 1
@@ -60,11 +59,45 @@ def add_question():
             filename_original = file.filename.split('.')
             filename = ".".join([str(id_), filename_original[-1]])
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        new_question.append('/static/' + filename)
+            new_question.append('/static/' + filename)
         list_of_data.append(new_question)
         data_manager.write_data("sample_data/question.csv", list_of_data, titles)
         return redirect('/question/' + str(id_))
     return render_template('add_q.html')
+
+@app.route('/question/<id>/edit', methods=['GET', 'POST'])
+def edit_question(id):
+    question = []
+    mentheto = False
+    titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+    questions = data_manager.get_all_data('sample_data/question.csv', titles)
+
+    for item in questions:
+        if item[0] == id:
+            question = item
+    generated_id = int(questions[-1][0]) + 1
+    if request.method == 'POST':
+        title = request.form['title']
+        message = request.form['message']
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename_original = file.filename.split('.')
+            filename = ".".join([id, filename_original[-1]])
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            mentheto = True
+        question[4] = title
+        question[5] = message
+        if mentheto == True:
+            question[6] = "/static/{}".format(filename)
+        for item in questions:
+            if item[0] == question[0]:
+                question[0] = int(questions[-1][0]) + 1
+                item = question
+
+        return redirect('/question/' + str(id))
+    return render_template('edit_question.html', question = question)
+
+
 
 @app.route('/question/<id>/new-answer', methods=['GET','POST'])
 def add_new_answer(id):

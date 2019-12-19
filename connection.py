@@ -1,9 +1,10 @@
 import data_manager
 
 def sort_questions(data):
-    data.sort(key=lambda x: x[1], reverse= True)
+    data.sort(key=lambda x: x[1], reverse = True)
 
     return data
+
 
 def get_question_by_id(id):
     titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
