@@ -58,4 +58,15 @@ table.table {
     width:80%;
     margin-left:10%;
     margin-right:10%;
+.cursorBabyYoda {
+  cursor: url('/uploads/BabyYoda.png'), auto;
+}
+
+button.fas {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
 }
