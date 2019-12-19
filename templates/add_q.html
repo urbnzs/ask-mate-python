@@ -2,14 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {% if edit %}
-    <title>Edit Question</title>
-    {% else %}
     <title>Add Question</title>
-    {% endif %}
 </head>
 <body style="background-image: url(/static/background.jpg);">
-<<<<<<< HEAD
+
 <style>
 /* customizable snowflake styling */
 .snowflake {
@@ -59,27 +55,22 @@
     ❆
   </div>
 </div>
-=======
+
 <body>
->>>>>>> e7e6b06e719bc1b785799299f633c6904fe9256b
-    {% if edit %}
-        <div style="color: aliceblue"><h1>Edit Question</h1></div><br>
-    {% else %}
-        <div style="color: aliceblue"><h1>Add Question</h1></div>
-    {% endif %}
+    <div style="color: aliceblue"><h1>Add Question</h1></div>
     <form action="/add-question" method="post" enctype="multipart/form-data">
         <label for="title_input">Question Title:</label><br>
-        <textarea type="text" id="title_input" name="title" rows="8" cols="80" required>{{ to_be_edited[4] if edit }}</textarea><br>
+        <textarea type="text" id="title_input" name="title" rows="8" cols="80" required></textarea><br>
 
         <label for="message_input">Message:</label><br>
-        <textarea type="text" id="message_input" name="message" rows="8" cols="80" required>{{ to_be_edited[5] if edit }}</textarea><br>
+        <textarea type="text" id="message_input" name="message" rows="8" cols="80" required></textarea><br>
 
         <label for="image_input">Image:</label><br>
         <input type="file" id="image_input" name="file" rows="8" cols="80" enctype="multipart/form-data"><br>
         <br>
 
         <button type="submit" enctype="multipart/form-data">Post Question</button>
-    </form>
+
     <form action="/list">
         <button type="submit">Cancel</button>
     </form>

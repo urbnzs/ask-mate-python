@@ -2,3 +2,5 @@ id,submission_time,vote_number,question_id,message,image
 0,1493398154,4,0,You need to use brackets: my_list = [],photo-1535498730771-e735b998cd64.jpeg
 1,1493088154,35,0,Look it up in the Python docs,photo-1535498730771-e735b998cd64.jpeg
 2,1576586570,0,7,dcfhj,photo-1535498730771-e735b998cd64.jpeg
+3,1576762249,0,8,yes,/static/103.jpg
+4,1576762306,0,8,no,/static/104.jpg

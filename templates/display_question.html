@@ -79,8 +79,9 @@
                     <td><form action="/answer/{{ item[0] }}/vote-up"><button type="submit">∧</button></form>{{ item[2] }}<form action="/answer/{{ item[0] }}/vote-down"><button type="submit">v</button></form></td>
                     <td>{{ item[3] }}</td>
                     <td>{{ item[4] }}</td>
-                    <td>{{ item[5] }}</td>
+                    <td><a href="{{ item[5] }}"><img src="{{ item[5] }} "></a></td>
                     <td><form action="/answer/{{ item[0] }}/delete"><button type="submit">Delete Answer</button></form></td>
+
 <!--                         <span>{{ item[6] }}</span>-->
 <!--                        <!–– <img src="/instance/uploads/{{ item[6] }}" alt="image"  height="100" width="100" style="alignment: right">-->
 <!--                    </form></td>-->
