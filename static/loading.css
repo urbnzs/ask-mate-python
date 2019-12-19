@@ -1,166 +1,62 @@
 body {
-	background-color: #e53838;
-}
+      position: relative; padding:0; margin:0;
 
-.santa {
-	height: 300px;
-	width: 200px;
-	position: relative;
-	margin: 50px auto 0;
-}
+    }
 
-.santa .hat {
-	position: absolute;
-	left: 50%;
-	margin: 0 0 0 -50px;
-	width: 0px;
-	height: 0px;
-	border-style: solid;
-	border-width: 0 50px 110px 50px;
-	border-color: transparent transparent #a40000 transparent;
-	line-height: 0px;
-	_border-color: #000000 #000000 #a40000 #000000;
-	_filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000');	
-}
+    .bg {
+      background: url('https://images.unsplash.com/photo-1443926818681-717d074a57af?crop=entropy&fit=crop&fm=jpg&h=725&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1375') no-repeat center bottom #666;
+      background-size: cover;
+      position: fixed;
+      height: 100%; width:100%; text-align:center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
 
-.santa .hat:after {
-	content: '';
-	position: absolute;
-	width: 0px;
-	height: 0px;
-	border-style: solid;
-	border-width: 40px 0 0 100px;
-	border-color: transparent transparent transparent #a40000;
-	
-	-webkit-transform: rotate(15deg);
-	-webkit-transform-origin: top left;
-	
-	-moz-transform: rotate(15deg);
-	-moz-transform-origin: top left;
-	
-	-ms-transform: rotate(15deg);
-	-ms-transform-origin: top left;
-	
-	-o-transform: rotate(15deg);
-	-o-transform-origin: top left;
-	
-	transform: rotate(15deg);
-	transform-origin: top left;
-}
+    svg {margin-top:0;}
 
-.santa .hat:before {
-	content: '';
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	background: #fff;
-	left: 75px;
-	top: 55px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-	z-index: 1;
-}
 
-.santa .eyes {
-	width: 110px;
-	height: 24px;
-	background: #fff;
-	-webkit-border-radius: 50px;
-	-moz-border-radius: 50px;
-	border-radius: 50px;
-	top: 100px;
-	left: 50%;
-	margin: 0 0 0 -55px;
-	position: absolute;
-}
+    /*.palpebra {transform:translate(0, -10px);}*/
 
-.santa .eyes:after {
-	position: absolute;
-	content: '';
-	width: 16px;
-	height: 16px;
-	background: white;
-	top: 32px;
-	left: 20px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-}
+    .naso,
+    .baffo,
+    .sopracciglio,
+    .ponpon,
+    .cappello {
+      animation: bounce 1s ease-in-out infinite alternate;
+    }
 
-.santa .eyes:before {
-	position: absolute;
-	content: '';
-	width: 16px;
-	height: 16px;
-	background: white;
-	top: 32px;
-	right: 20px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-}
+    .baffo {
+      animation-duration: 1.5s;
+    }
 
-.santa .beard_left, .santa .beard_right {
-	position: absolute;
-	height: 120px;
-	width: 60px;
-	bottom: 0;
-	left: 50%;
-	margin: 0 0 0 -60px;
-	overflow: hidden;
-}
+    .sopracciglio {
+      animation-duration: .5s;
+    }
 
-.santa .beard_right {
-	margin: 0;
-}
+    .cappello {
+      animation-duration: 1.5s;
+    }
 
-.santa .beard_left:after {
-	content: '';
-	position: absolute;
-	background: white;
-	width: 150px;
-	height: 150px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-	bottom: 0px;
-	left: 0;
-}
+    .barba {
+      animation: bounce-sm 1s ease-in-out infinite alternate;
+    }
 
-.santa .beard_left:before {
-	content: '';
-	position: absolute;
-	background-color: #e53838;
-	width: 73px;
-	height: 50px;
-	border-radius: 50%;
-	top: -45px;
-	left: 2px;
-	z-index: 5;
-}
+    @keyframes bounce {
+      0% {
+        transform: translate(0, -2%);
+      }
+      100% {
+        transform: translate(0, 2%);
+      }
+    }
 
-.santa .beard_right:after {
-	content: '';
-	position: absolute;
-	background-color: #e53838;
-	width: 73px;
-	height: 50px;
-	border-radius: 50%;
-	top: -45px;
-	right: 2px;
-	z-index: 5;
-}
-
-.santa .beard_right:before {
-	content: '';
-	position: absolute;
-	background: white;
-	width: 150px;
-	height: 150px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
-	bottom: 0px;
-	right: 0
-}
+    @keyframes bounce-sm {
+      0% {
+        transform: translate(0, 0%);
+      }
+      100% {
+        transform: translate(0, 3%);
+      }
+    }

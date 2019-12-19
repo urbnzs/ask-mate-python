@@ -14,3 +14,16 @@ td {
 
 h3 { font-family: Optima; font-size: 24px; font-style: normal; font-variant: normal; font-weight: bold; line-height: 30px; color: aliceblue}
 h4 { font-family: Optima; font-size: 18px; font-style: normal; font-variant: normal; font-weight: bold; line-height: 30px; color: darkslateblue}
+
+.cursorBabyYoda {
+  cursor: url('/uploads/BabyYoda.png'), auto;
+}
+
+button.fas {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}

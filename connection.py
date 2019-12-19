@@ -56,7 +56,7 @@ def delete_answer(id, by_question=False):
 def sorting_questions(order_by, direction):
     titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
     questions = data_manager.get_all_data('sample_data/question.csv', titles)
-    title_dict = {"id": 0, "submission-time": 1, "view-number": 2, "vote-number": 3, "title": 4}
+    title_dict = {"id": 0, "submission-time": 1, "view-number": 2, "vote-number": 3, "title": 4, "message": 5}
 
     if direction == "asc":
         if questions[0][title_dict[order_by]].isdigit():

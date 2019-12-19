@@ -5,10 +5,8 @@ import connection
 import data_manager
 import time
 
-
 UPLOAD_FOLDER = '/images'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
 
 app = Flask(__name__)
 
@@ -57,14 +55,15 @@ def add_edit_question(question_id=0, edit=None):
     to_be_edited = connection.get_question_by_id(question_id)
     if request.method == 'POST':
         if edit:
+            f = request.files['file']
             edited_question = [to_be_edited[0], to_be_edited[1], to_be_edited[2], to_be_edited[3]]
             edited_question.append(request.form['title'])
             edited_question.append(request.form['message'])
             if 'file' not in request.files:
                 return redirect(request.url)
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            if f and allowed_file(f.filename):
+                filename = secure_filename(f.filename)
+                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 return redirect(url_for('uploaded_file', filename=filename))
             else:
                 edited_question.append(to_be_edited[6])
@@ -114,7 +113,7 @@ def answer_delete(id):
     return redirect('/question/' + str(question_id))
 
 
-@app.route('/list/order_by=<order>&order_direction=<direct>')
+@app.route('/list/ordered/<order>/<direct>')
 def list_ordered(order, direct):
     list_of_data = connection.sorting_questions(order, direct)
     return render_template('list.html', list_of_data = list_of_data)
