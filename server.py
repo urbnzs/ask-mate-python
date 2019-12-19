@@ -82,18 +82,18 @@ def edit_question(id):
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename_original = file.filename.split('.')
-            filename = ".".join([id, filename_original[-1]])
+            filename = "20" + ".".join([id, filename_original[-1]])
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             mentheto = True
         question[4] = title
         question[5] = message
         if mentheto == True:
-            question[6] = "/static/{}".format(filename)
-        for item in questions:
-            if item[0] == question[0]:
-                question[0] = int(questions[-1][0]) + 1
-                item = question
-
+            question[6] = "/static/" + filename
+        #for item in questions:
+            #if item[0] == question[0]:
+                #question[0] = int(questions[-1][0]) + 1
+                #item = question
+        data_manager.write_data('sample_data/question.csv', questions, titles)
         return redirect('/question/' + str(id))
     return render_template('edit_question.html', question = question)
 
