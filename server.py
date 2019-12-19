@@ -1,22 +1,22 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import connection
 import data_manager
 import time
 
-UPLOAD_FOLDER = '/images'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app = Flask(__name__, static_url_path='/static')
 
-app = Flask(__name__)
+DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
+DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+UPLOAD_folder = './static/'
+ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_folder
 
-uploads_dir = os.path.join(app.instance_path, 'uploads')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_extensions
 
 @app.route('/', methods=['GET', 'POST'])
 def loading_page():
@@ -42,9 +42,9 @@ def display_question(id):
     connection.view_number(id)
     return render_template('display_question.html', question = question, answers = answers, question_id=question_id)
 
-@app.route('/question/<question_id>/<edit>', methods=['GET', 'POST'])
 @app.route('/add-question', methods=['GET', 'POST'])
-def add_edit_question(question_id=0, edit=None):
+def add_question():
+    edit = None
     titles = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
     list_of_data = data_manager.get_all_data("sample_data/question.csv", titles)
     id_ = int(list_of_data[-1][0]) + 1
@@ -52,33 +52,19 @@ def add_edit_question(question_id=0, edit=None):
     view_num = 0
     vote_num = 0
     new_question = [id_, submission_time, view_num, vote_num]
-    to_be_edited = connection.get_question_by_id(question_id)
     if request.method == 'POST':
-        if edit:
-            f = request.files['file']
-            edited_question = [to_be_edited[0], to_be_edited[1], to_be_edited[2], to_be_edited[3]]
-            edited_question.append(request.form['title'])
-            edited_question.append(request.form['message'])
-            if 'file' not in request.files:
-                return redirect(request.url)
-            if f and allowed_file(f.filename):
-                filename = secure_filename(f.filename)
-                f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return redirect(url_for('uploaded_file', filename=filename))
-            else:
-                edited_question.append(to_be_edited[6])
-            list_of_data[edited_question[0]] = edited_question
-            data_manager.write_data("sample_data/question.csv", list_of_data, titles)
-            return redirect('/question' + str(edited_question[0]))
-        else:
-            new_question.append(request.form['title'])
-            new_question.append(request.form['message'])
-            profile = request.files['file']
-            profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
-            list_of_data.append(new_question)
-            data_manager.write_data("sample_data/question.csv", list_of_data, titles)
-            return redirect('/question/' + str(id_))
-    return render_template('add_q.html', edit=edit, to_be_edited=to_be_edited)
+        new_question.append(request.form['title'])
+        new_question.append(request.form['message'])
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename_original = file.filename.split('.')
+            filename = ".".join([str(id_), filename_original[-1]])
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        new_question.append('/static/' + filename)
+        list_of_data.append(new_question)
+        data_manager.write_data("sample_data/question.csv", list_of_data, titles)
+        return redirect('/question/' + str(id_))
+    return render_template('add_q.html')
 
 @app.route('/question/<id>/new-answer', methods=['GET','POST'])
 def add_new_answer(id):
@@ -92,8 +78,12 @@ def add_new_answer(id):
     new_answer = [answer_id, submission_time, vote_num, question_id]
     if request.method == 'POST':
         new_answer.append(request.form['message'])
-        profile = request.files['image']
-        profile.save(os.path.join(uploads_dir, secure_filename(profile.filename)))
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename_original = file.filename.split('.')
+            filename = '10' + ".".join([str(answer_id), filename_original[-1]])
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        new_answer.append('/static/' + filename)
         all_answers.append(new_answer)
         data_manager.write_data("sample_data/answer.csv", all_answers, titles)
         return redirect('/question/' + str(question_id))
@@ -142,9 +132,10 @@ def vote_down_answer(answer_id):
     question_id = voted_answer[0][3]
     return redirect('/question/' + str(question_id))
 
-
-
-
+@app.route('/uploaded-image/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 
 
