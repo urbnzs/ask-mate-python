@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ question[4] }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='letters.css') }}">
 </head>
-<body>
+<body style="background-image: url(/static/background.jpg);">
 <style>
 /* customizable snowflake styling */
 .snowflake {
@@ -55,13 +56,14 @@
     ❆
   </div>
 </div>
-<div style="text-align: center;"><h1>{{ question[4] }} </h1></div><br>
+<div style="text-align: center; color: aliceblue"><h1>{{ question[4] }} </h1></div><br>
 <form action="/question/{{ question_id }}/delete">
     <button type="submit">Delete Question</button>
 </form>
-<div style="alignment: center width: 300px; border: 15px solid green; padding: 50px; margin: 20px; text-align: center;"><p>{{ question[5] }}</p></div>
-
-    <table style="width: 95%">
+    <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); font-weight: bold; width: 70%; margin-left: 15%; margin-right: 15%; font-size: 24px" >{{ question[5] }}</div></p>
+    <div class="container">
+	    <div class="table-wrap">
+    <table class="table">
         <tr>
             <th><h3>ID</h3></th>
             <th><h3>Submission Time</h3></th>
@@ -87,6 +89,7 @@
             {% endfor %}
 
     </table>
+        </div></div>
     <form action="/question/{{ question_id }}/new-answer">
         <button type="submit">Add New Answer</button>
     </form>
