@@ -22,7 +22,9 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def loading_page():
-    render_template('loading.html')
+    if request.method=="POST":
+        return redirect('/list')
+    return render_template('loading.html')
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
     titles = ["id","submission_time","view_number","vote_number","title","message","image"]
