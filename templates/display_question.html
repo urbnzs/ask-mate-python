@@ -74,17 +74,13 @@
 
             {% for item in answers %}
                 <tr>
-                    <td>{{ item[0] }}</td>
-                    <td>{{ item[1] }}</td>
-                    <td><form action="/answer/{{ item[0] }}/vote-up"><button type="submit">∧</button></form>{{ item[2] }}<form action="/answer/{{ item[0] }}/vote-down"><button type="submit">v</button></form></td>
-                    <td>{{ item[3] }}</td>
-                    <td>{{ item[4] }}</td>
-                    <td><a href="{{ item[5] }}"><img src="{{ item[5] }} " width="150" height="150"></a></td>
-                    <td><form action="/answer/{{ item[0] }}/delete"><button type="submit">Delete Answer</button></form></td>
-
-<!--                         <span>{{ item[6] }}</span>-->
-<!--                        <!–– <img src="/instance/uploads/{{ item[6] }}" alt="image"  height="100" width="100" style="alignment: right">-->
-<!--                    </form></td>-->
+                    <td>{{ item['id'] }}</td>
+                    <td>{{ item['submission_time'] }}</td>
+                    <td><form action="/answer/{{ item['id'] }}/vote-up"><button type="submit">∧</button></form>{{ item['vote_number'] }}<form action="/answer/{{ item['id'] }}/vote-down"><button type="submit">v</button></form></td>
+                    <td>{{ item['question_id'] }}</td>
+                    <td>{{ item['message'] }}</td>
+                    <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
+                    <td><form action="/answer/{{ item['id'] }}/delete"><button type="submit">Delete Answer</button></form></td>
                 </tr>
             {% endfor %}
 

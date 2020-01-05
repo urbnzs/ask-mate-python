@@ -13,4 +13,5 @@ app.js (bundled file with webpack, including jquery)",/static/201.png
 
 This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",/static/202.png
 3,1576783763,36,0,Kiskuta,Kiskuta,/static/204.png
-4,1576783932,6,0,Kistita,Kistita,/static/3.png
+4,1576783932,11,-1,Kistita,Kistita,/static/3.png
+5,1576833777,16,2,Is this the cutest animal ever?,What is your opinion?,/static/5.jpeg

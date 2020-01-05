@@ -1,23 +1,25 @@
 import csv
 
-answers_titles = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
-def get_all_data(filename, titles):
-    with open(filename) as file:
-        file_reader = csv.DictReader(file, delimiter=',')
-        datalist = []
-        for row in file_reader:
-            data = []
-            for title in titles:
-                data.append(row[title])
-            datalist.append(data)
-    return datalist
+def get_all_data(filename):
+    data = []
+    reader = csv.DictReader(open(filename))
+    for line in reader:
+        data.append(line)
+    return data
 
-def write_data(filename, updated_data, titles):
-    with open(filename, "w", newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(titles)
 
-        for line in updated_data:
-            writer.writerow(line)
+def write_data(filename, updated_data):
+    f = open(filename, "w")
+    if filename == 'sample_data/question.csv':
+        field_names=["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+    else:
+        field_names=["id", "submission_time", "vote_number", "question_id", "message", "image"]
+
+    writer = csv.DictWriter(
+        f, fieldnames= field_names)
+    writer.writeheader()
+    for line in updated_data:
+        writer.writerow(line)
+    f.close()
 
