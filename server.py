@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import connection
 import data_manager
 import time
+from datetime import datetime
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -45,28 +46,22 @@ def display_question(id):
     connection.view_number(id)
     return render_template('display_question.html', question=question, answers=answers, question_id=question_id)
 
-
+#DONE
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    list_of_data = data_manager.get_all_data("sample_data/question.csv")
-    id_ = int(list_of_data[-1]['id']) + 1
-    submission_time = int(time.time())
+    submission_time = datetime.now()
     view_num = 0
     vote_num = 0
-    new_question = {'id' : id_, 'submission_time' : submission_time,'view_number' : view_num, 'vote_number' :vote_num,
+    new_question = {'submission_time' : submission_time,'view_number' : view_num, 'vote_number' :vote_num,
                     'image' : None}
     if request.method == 'POST':
         new_question['title'] = request.form['title']
         new_question['message'] = request.form['message']
         file = request.files['file']
         if file and allowed_file(file.filename):
-            print("VAN FILE")
-            filename_original = file.filename.split('.')
-            filename = ".".join([str(id_), filename_original[-1]])
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            new_question['image'] = "/static/{}".format(filename)
-        list_of_data.append(new_question)
-        data_manager.write_data("sample_data/question.csv", list_of_data)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            new_question['image'] = "/static/{}".format(file.filename)
+        id_ = data_manager.add_new_question(new_question)
         return redirect('/question/' + str(id_))
     return render_template('add_q.html')
 
@@ -97,7 +92,7 @@ def edit_question(id):
         return redirect('/question/' + str(id))
     return render_template('edit_question.html', question=question)
 
-#TODO: ADD NEW ANSWER AND MORE TO ADD WITH HTML
+
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):
     question = connection.get_question_by_id(id)
