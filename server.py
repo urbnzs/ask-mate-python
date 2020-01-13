@@ -53,7 +53,7 @@ def add_question():
     view_num = 0
     vote_num = 0
     new_question = {'submission_time' : submission_time,'view_number' : view_num, 'vote_number' :vote_num,
-                    'image' : None}
+                    'title': None, 'message': None, 'image': None}
     if request.method == 'POST':
         new_question['title'] = request.form['title']
         new_question['message'] = request.form['message']

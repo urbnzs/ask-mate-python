@@ -25,12 +25,15 @@ def write_data(filename, updated_data):
 
 @database_common.connection_handler
 def add_new_question(cursor, question):
-    values = "(question['submission_time'], question['view_number'], question['vote_number'], question['title'], question['message'], question['images'])"
-
+    values = ', '.join("'" + str(x) + "'" for x in question.values())
     cursor.execute("""
                     INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                    VALUES %(values)s;
-                     """, {'values': values})
+                    VALUES (%s);
+                     """ % (values))
+    cursor.execute("""
+                    SELECT id FROM question 
+                    WHERE submission_time = %(submission_time)s;""", {'submission_time': question['submission_time']})
 
-    id = cursor.lastrowid
-    return id
+    id = cursor.fetchall()
+    print(id[0][1])
+    return id[0][1]
