@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from werkzeug.utils import secure_filename
 import connection
 import data_manager
-import time
 from datetime import datetime
 
 app = Flask(__name__, static_url_path='/static')
@@ -26,18 +25,14 @@ def loading_page():
         return redirect('/list')
     return render_template('loading.html')
 
-
+#DONE
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
-    list_of_data = connection.sort_questions(data_manager.get_all_data("sample_data/question.csv"))
-    if request.method == "POST":
-        order = request.form['Order By']
-        direction = request.form['Direction']
-        return redirect('/list/order_by=' + order + '&order_direction=' + direction)
+    questions = data_manager.list_questions()
 
-    return render_template('list.html', list_of_data=list_of_data)
+    return render_template('list.html', list_of_data=questions)
 
-
+#DONE ELVILEG
 @app.route('/question/<id>')
 def display_question(id):
     question = connection.get_question_by_id(id)
@@ -65,7 +60,7 @@ def add_question():
         return redirect('/question/' + str(id_))
     return render_template('add_q.html')
 
-
+#TODO: edit question
 @app.route('/question/<id>/edit', methods=['GET', 'POST'])
 def edit_question(id):
     question = []
@@ -92,39 +87,32 @@ def edit_question(id):
         return redirect('/question/' + str(id))
     return render_template('edit_question.html', question=question)
 
-
+#TODO: Valami nem okés neki a question_id "foreign key"-el
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):
-    question = connection.get_question_by_id(id)
-    all_answers = data_manager.get_all_data("sample_data/answer.csv")
-    answer_id = int(all_answers[-1]['id']) + 1
-    submission_time = int(time.time())
+    submission_time = datetime.now()
     vote_num = 0
     question_id = id
-    new_answer = {'id' : answer_id, 'submission_time' : submission_time, 'vote_number' : vote_num, 'question_id' : question_id, 'image' : None}
+    question = data_manager.get_question_by_id(question_id)
+    new_answer = {'submission_time' : submission_time, 'vote_number' : vote_num, 'question_id' : question_id,'message' : None, 'image' : None}
     if request.method == 'POST':
         new_answer['message'] = request.form['message']
         file = request.files['file']
         if file and allowed_file(file.filename):
-
-            filename_original = file.filename.split('.')
-            filename = '10' + ".".join([str(answer_id), filename_original[-1]])
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(file.filename)
-            new_answer['image'] = ('/static/' + filename)
-        all_answers.append(new_answer)
-        data_manager.write_data("sample_data/answer.csv", all_answers)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            new_answer['image'] = ('/static/' + file.filename)
+        id_ = data_manager.add_new_answer(new_answer)
         return redirect('/question/' + str(question_id))
     return render_template('add_answer.html', question=question, id=id)
 
-
+#TODO:Valami baja van ezt se értem
 @app.route('/question/<id>/delete')
 def question_delete(id):
     connection.delete_question(id)
     connection.delete_answer(id, True)
     return redirect('/list')
 
-
+#TODO: Valami baja van, nem értem
 @app.route('/answer/<id>/delete')
 def answer_delete(id):
     answer_to_delete = connection.answers_by_id(id, False)
@@ -132,25 +120,25 @@ def answer_delete(id):
     connection.delete_answer(id)
     return redirect('/question/' + str(question_id))
 
-
+#TODO: ordered list
 @app.route('/list/ordered/<order>/<direct>')
 def list_ordered(order, direct):
     list_of_data = connection.sorting_questions(order, direct)
     return render_template('list.html', list_of_data=list_of_data)
 
-
+#DONE
 @app.route('/question/<question_id>/vote-up')
 def vote_up_question(question_id):
     connection.voting_question(question_id, True)
     return redirect('/list')
 
-
+#DONE
 @app.route('/question/<question_id>/vote-down')
 def vote_down_question(question_id):
     connection.voting_question(question_id, False)
     return redirect('/list')
 
-
+#DONE
 @app.route('/answer/<answer_id>/vote-up')
 def vote_up_answer(answer_id):
     connection.voting_answers(answer_id, True)
@@ -158,7 +146,7 @@ def vote_up_answer(answer_id):
     question_id = voted_answer[0]['question_id']
     return redirect('/question/' + str(question_id))
 
-
+#DONE
 @app.route('/answer/<answer_id>/vote-down')
 def vote_down_answer(answer_id):
     connection.voting_answers(answer_id, False)
