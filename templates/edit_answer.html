@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Question</title>
+    <title>Edit Answer</title>
 </head>
 <body style="background-image: url(/static/background.jpg);">
 
@@ -186,10 +186,8 @@
 </div>
 
 <body>
-<div style="color: aliceblue"><h1>Edit Question</h1></div>
-<form action="/question/{{ question[0]['id'] }}/edit" method="post" enctype="multipart/form-data">
-    <label for="title_input">Question Title:</label><br>
-    <textarea type="text" id="title_input" name="title" rows="8" cols="80" required>{{ question[0]['title'] }}</textarea><br>
+<div style="color: aliceblue"><h1>Edit Answer</h1></div>
+<form action="/answer/{{ question[0]['id'] }}/edit" method="post" enctype="multipart/form-data">
 
     <label for="message_input">Message:</label><br>
     <textarea type="text" id="message_input" name="message" rows="8" cols="80" required>{{ question[0]['message'] }}</textarea><br>
@@ -200,7 +198,7 @@
 
     <button type="submit" enctype="multipart/form-data">Edit Question</button>
 
-    <form action="/list">
+    <form action="/display_question/{{ question[0]['question_id'] }}">
         <button type="submit">Cancel</button>
     </form>
 </body>

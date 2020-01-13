@@ -32,7 +32,7 @@ def list_questions():
 
     return render_template('list.html', list_of_data=questions)
 
-#DONE ELVILEG
+#DONE
 @app.route('/question/<id>')
 def display_question(id):
     question = connection.get_question_by_id(id)
@@ -60,33 +60,44 @@ def add_question():
         return redirect('/question/' + str(id_))
     return render_template('add_q.html')
 
-#TODO: edit question
+#DONE
 @app.route('/question/<id>/edit', methods=['GET', 'POST'])
 def edit_question(id):
-    question = []
-    questions = data_manager.get_all_data('sample_data/question.csv')
-
-    for item in questions:
-        if item['id'] == id:
-            question = item
+    question = data_manager.get_question_by_id(id)
     if request.method == 'POST':
         title = request.form['title']
         message = request.form['message']
         file = request.files['file']
         if file and allowed_file(file.filename):
-            filename_original = file.filename.split('.')
-            filename = "20" + ".".join([id, filename_original[-1]])
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            question['image'] = "/static/{}".format(filename)
-        else:
-            question['image'] = None
 
-        question['title'] = title
-        question['message'] = message
-        data_manager.write_data('sample_data/question.csv', questions)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            question['image'] = "/static/{}".format(file.filename)
+
+        question[0]['title'] = title
+        question[0]['message'] = message
+
+        data_manager.edit_question(id, question)
         return redirect('/question/' + str(id))
-    return render_template('edit_question.html', question=question)
+    return render_template('edit_question.html', question=question, id = id)
+#DONE
+@app.route('/answer/<id>/edit', methods=['GET', 'POST'])
+def edit_answer(id):
+    answer = data_manager.get_answer_by_id(id)
+    question_id = answer[0]['question_id']
+    if request.method == 'POST':
+        message = request.form['message']
+        file = request.files['file']
+        submission_time = datetime.now()
+        if file and allowed_file(file.filename):
 
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+            answer[0]['image'] = "/static/{}".format(file.filename)
+
+        answer[0]['message'] = message
+
+        data_manager.edit_answer(id, answer)
+        return redirect('/question/' + str(question_id))
+    return render_template('edit_answer.html', question=answer, id = id)
 #TODO: Valami nem okés neki a question_id "foreign key"-el
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):

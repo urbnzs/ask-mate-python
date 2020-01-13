@@ -30,7 +30,7 @@ def answers_by_id(cursor, id, by_question=True):
     else:
         cursor.execute("""
                         SELECT * FROM answer
-                        WHERE id = %(id)s;
+                        WHERE id = %(id)s
                         
                         """, {'id': id})
 
