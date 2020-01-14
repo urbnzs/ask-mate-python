@@ -59,9 +59,11 @@
 <form action="/question/{{ question_id }}/delete">
     <button type="submit">Delete Question</button>
 </form>
-    <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); font-weight: bold; width: 70%; margin-left: 15%; margin-right: 15%; font-size: 24px" >{{ question[5] }}</div></p>
+    <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); font-weight: bold; width: 70%; margin-left: 15%; margin-right: 15%; font-size: 24px" >{{ question[0]['title'] }}</div></p>
+    <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); width: 70%; margin-left: 15%; margin-right: 15%; font-size: 20px" >{{ question[0]['message'] }}</div></p>
     <div class="container">
 	    <div class="table-wrap">
+
     <table class="table">
         <tr>
             <th><h3>ID</h3></th>
@@ -81,9 +83,9 @@
                     <td>{{ item['message'] }}</td>
                     <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
                     <td><form action="/answer/{{ item['id'] }}/delete"><button type="submit">Delete Answer</button></form></td>
-                        <form action="/answer/{{ question_id }}/edit">
+                    <td><form action="/answer/{{ item['id'] }}/edit">
                             <button type="submit">Edit Answer</button>
-                        </form>
+                        </form></td>
                 </tr>
             {% endfor %}
 
