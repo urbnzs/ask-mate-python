@@ -37,8 +37,9 @@ def display_question(id):
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
     question_id = id
+    comments = data_manager.get_comment_by_question_id(id)
     connection.view_number(id)
-    return render_template('display_question.html', question=question, answers=answers, question_id=question_id)
+    return render_template('display_question.html', question=question, answers=answers, question_id=question_id, comments=comments)
 
 #DONE
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -115,6 +116,7 @@ def add_new_answer(id):
         return redirect('/question/' + str(question_id))
     return render_template('add_answer.html', question=question, id=id)
 
+#DONE
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_question(question_id):
     submission_time = datetime.now()
@@ -124,6 +126,28 @@ def add_new_comment_to_question(question_id):
         data_manager.add_comment_to_question(new_comment)
         return redirect('/question/' + str(question_id))
     return render_template('add_comment.html', id=question_id)
+
+@app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
+def add_new_comment_to_answer(answer_id):
+    submission_time = datetime.now()
+    new_comment = {'answer_id': answer_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
+    answer = connection.answers_by_id(answer_id, False)
+    question_id = answer[0]['question_id']
+    if request.method == 'POST':
+        new_comment['message'] = request.form['message']
+        data_manager.add_comment_to_answer(new_comment)
+        return redirect('/question/' + str(question_id))
+    return render_template('add_comment_to_answer.html', id=answer_id)
+
+#TODO finish
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+    submission_time = datetime.now()
+    edited_comment = {'submission_time': submission_time}
+    if request.method == 'POST':
+        edited_comment['message'] = request.form['message']
+        data_manager.edit_comments(comment_id, edited_comment)
+
 
 #TODO:Valami baja van ezt se értem
 @app.route('/question/<id>/delete')

@@ -113,3 +113,4 @@ def view_number(cursor, id):
                     WHERE id = %(id)s;
                      
                     """, {'id' : id})
+

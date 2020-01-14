@@ -125,3 +125,29 @@ def add_comment_to_question(cursor, comment):
                           INSERT INTO comment (question_id, message, submission_time, edited_count)
                           VALUES (%s);
                            """ % (values))
+
+@database_common.connection_handler
+def get_comment_by_question_id(cursor, question_id):
+    cursor.execute("""
+                    SELECT * FROM comment
+                    WHERE question_id = %s;
+                    """ % (question_id))
+    comments = cursor.fetchall()
+    return comments
+
+@database_common.connection_handler
+def add_comment_to_answer(cursor, comment):
+    values = ', '.join("'" + str(x) + "'" for x in comment.values())
+    cursor.execute("""
+                          INSERT INTO comment (answer_id, message, submission_time, edited_count)
+                          VALUES (%s);
+                           """ % (values))
+
+@database_common.connection_handler
+def edit_comments(cursor, comment_id, comment):
+    cursor.execute("""
+                    UPDATE comment
+                    SET message=%(message)s, submission_time=%(submission_time)s, edited_count=%(edited_count)s
+                    WHERE id = %(comment_id)s; 
+                    """, {'message': comment['message'], 'submission_time': comment['submission_time'],
+                          'edited_count': comment['edited_count'], 'comment_id': comment_id})

@@ -63,7 +63,30 @@
     <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); width: 70%; margin-left: 15%; margin-right: 15%; font-size: 20px" >{{ question[0]['message'] }}</div></p>
     <div class="container">
 	    <div class="table-wrap">
+            <h2>Question Comments</h2>
+    <table class="table">
+        <tr>
+            <th><h3>Message</h3></th>
+            <th><h3>Submission Time</h3></th>
+            <th><h3>Edited Count</h3></th>
+        </tr>
+        {% for comment in comments %}
 
+            <tr>
+                <td>{{ comment['message'] }}</td>
+                <td>{{ comment['submission_time'] }}</td>
+                {% if comment['edited_count'] != None %}
+                    <td>Edited {{ comment['edited_count'] }} times.</td>
+                {% else %}
+                    <td>Edited 0 times.</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    <form action="/question/{{ question_id }}/new-comment">
+        <button type="submit">Add New Comment</button>
+    </form>
+    <h2>Answers</h2>
     <table class="table">
         <tr>
             <th><h3>ID</h3></th>
@@ -93,9 +116,6 @@
         </div></div>
     <form action="/question/{{ question_id }}/new-answer">
         <button type="submit">Add New Answer</button>
-    </form>
-    <form action="/question/{{ question_id }}/new-comment">
-        <button type="submit">Add New Comment</button>
     </form>
     <form action="/list">
         <button type="submit">Go Back to Main Page</button>
