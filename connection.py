@@ -1,60 +1,69 @@
 import data_manager
+import database_common
 
-
+#TODO: sort questions
 def sort_questions(data):
     data.sort(key=lambda x: x['submission_time'], reverse=True)
 
     return data
 
 
-def get_question_by_id(id):
-    questions = data_manager.get_all_data('sample_data/question.csv')
-    for question in questions:
-        if question['id'] == id:
-            return question
+@database_common.connection_handler
+def get_question_by_id(cursor, id):
+    cursor.execute("""
+                    SELECT * FROM question
+                    where id = %(id)s;
 
+                    """, {'id': id})
 
-def answers_by_id(id, by_question=True):
-    return_list = []
-    answers = data_manager.get_all_data('sample_data/answer.csv')
+    question = cursor.fetchall()
+    return question
+
+@database_common.connection_handler
+def answers_by_id(cursor, id, by_question=True):
     if by_question:
-        for answer in answers:
-            if answer['question_id'] == id:
-                return_list.append(answer)
+        cursor.execute("""
+                        SELECT * FROM answer
+                        WHERE question_id = %(id)s;
+                        
+                        """, {'id' : id})
     else:
-        for answer in answers:
-            if answer['id'] == id:
-                return_list.append(answer)
+        cursor.execute("""
+                        SELECT * FROM answer
+                        WHERE id = %(id)s
+                        
+                        """, {'id': id})
 
-    return return_list
-
-
-def delete_question(id):
-    questions = data_manager.get_all_data("sample_data/question.csv")
-    return_list = []
-    for question in questions:
-        if question['id'] != id:
-            return_list.append(question)
-
-    data_manager.write_data("sample_data/question.csv", return_list)
+    answers = cursor.fetchall()
+    return answers
 
 
-def delete_answer(id, by_question=False):
-    return_list = []
-    answers = data_manager.get_all_data('sample_data/answer.csv')
+
+@database_common.connection_handler
+def delete_question(cursor,id):
+    cursor.execute("""
+                    DELETE FROM question
+                    WHERE id = %(id)s;
+    
+                    """,{'id': id})
+
+
+@database_common.connection_handler
+def delete_answer(cursor, id,by_question = False):
     if by_question:
-        for answer in answers:
-            if answer['question_id'] != id:
-                return_list.append(answer)
+        cursor.execute("""
+                            DELETE FROM answer
+                            WHERE question_id = %(id)s;
+                            """,{'id' : id})
     else:
-        for answer in answers:
-            if answer['id'] != id:
-                return_list.append(answer)
-
-    data_manager.write_data('sample_data/answer.csv', return_list)
-
+        cursor.execute("""
+                            DELETE FROM answer
+                            WHERE id = %(id)s;
+                            """, {'id' : id})
 
 
+
+#TODO: sorting questions by any order and direction
 def sorting_questions(order_by, direction):
     questions = data_manager.get_all_data('sample_data/question.csv')
     if direction == "asc":
@@ -70,38 +79,43 @@ def sorting_questions(order_by, direction):
 
     return questions
 
+@database_common.connection_handler
+def voting_question(cursor, id, up):
 
-def voting_question(id, up):
-    questions = data_manager.get_all_data('sample_data/question.csv')
-
-    for question in questions:
-        if question['id'] == id:
-            if not up:
-                question['vote_number'] = str(int(question['vote_number']) - 1)
-            else:
-                question['vote_number'] = str(int(question['vote_number']) + 1)
-
-    data_manager.write_data('sample_data/question.csv', questions)
-
-
-def voting_answers(id, up):
-    answers = data_manager.get_all_data('sample_data/answer.csv')
-
-    for answer in answers:
-        if answer['id'] == id:
-            if up is False:
-                answer['vote_number'] = str(int(answer['vote_number']) - 1)
-            else:
-                answer['vote_number'] = str(int(answer['vote_number']) + 1)
-
-    data_manager.write_data('sample_data/answer.csv', answers)
+    if up:
+        cursor.execute("""
+                        UPDATE question
+                        SET vote_number = vote_number +1 
+                        WHERE id = %(id)s;
+                        """, {'id' : id})
+    else:
+        cursor.execute("""
+                                UPDATE question
+                                SET vote_number = vote_number -1 
+                                WHERE id = %(id)s;
+                                """, {'id': id})
 
 
-def view_number(id):
-    questions = data_manager.get_all_data('sample_data/question.csv')
+@database_common.connection_handler
+def voting_answers(cursor, id, up):
+    if up:
+        cursor.execute("""
+                        UPDATE answer
+                        SET vote_number = vote_number +1 
+                        WHERE id = %(id)s;
+                        """, {'id': id})
+    else:
+        cursor.execute("""
+                                UPDATE answer
+                                SET vote_number = vote_number -1 
+                                WHERE id = %(id)s;
+                                """, {'id': id})
 
-    for question in questions:
-        if question['id'] == id:
-            question['view_number'] = str(int(question['view_number']) + 1)
-
-    data_manager.write_data('sample_data/question.csv', questions)
+@database_common.connection_handler
+def view_number(cursor, id):
+    cursor.execute("""
+                    UPDATE question
+                    SET view_number = view_number + 1
+                    WHERE id = %(id)s;
+                     
+                    """, {'id' : id})
