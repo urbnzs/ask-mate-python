@@ -35,6 +35,7 @@ def list_questions():
 #DONE
 @app.route('/question/<id>')
 def display_question(id):
+    print(id)
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
     question_id = id
@@ -82,7 +83,9 @@ def edit_question(id):
 #DONE
 @app.route('/answer/<id>/edit', methods=['GET', 'POST'])
 def edit_answer(id):
+    print(id)
     answer = data_manager.get_answer_by_id(id)
+    print(answer)
     question_id = answer[0]['question_id']
     if request.method == 'POST':
         message = request.form['message']
@@ -97,7 +100,8 @@ def edit_answer(id):
 
         data_manager.edit_answer(id, answer)
         return redirect('/question/' + str(question_id))
-    return render_template('edit_answer.html', question=answer, id = id)
+    return render_template('edit_answer.html', question=answer, id=id)
+
 #TODO: Valami nem okés neki a question_id "foreign key"-el
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):

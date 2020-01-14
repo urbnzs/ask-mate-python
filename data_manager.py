@@ -44,13 +44,15 @@ def get_question_by_id(cursor,id):
 
 @database_common.connection_handler
 def get_answer_by_id(cursor, id):
+    print(id)
     cursor.execute("""
                     SELECT * FROM answer
-                    where id = %(id)s;
-
+                    WHERE id = %(id)s
+                    ORDER BY id;
                     """, {'id': id})
 
     answer = cursor.fetchall()
+    print(answer)
     return answer
 
 
@@ -58,6 +60,7 @@ def get_answer_by_id(cursor, id):
 def list_questions(cursor):
     cursor.execute("""
                     SELECT * FROM question
+                    ORDER BY id;
                     """)
 
     questions = cursor.fetchall()

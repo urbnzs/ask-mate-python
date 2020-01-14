@@ -1,12 +1,6 @@
 import data_manager
 import database_common
 
-#TODO: sort questions
-def sort_questions(data):
-    data.sort(key=lambda x: x['submission_time'], reverse=True)
-
-    return data
-
 
 @database_common.connection_handler
 def get_question_by_id(cursor, id):
@@ -63,19 +57,19 @@ def delete_answer(cursor, id,by_question = False):
 
 
 
-#TODO: sorting questions by any order and direction
-def sorting_questions(order_by, direction):
-    questions = data_manager.get_all_data('sample_data/question.csv')
+@database_common.connection_handler
+def sorting_questions(cursor, order_by, direction):
     if direction == "asc":
-        if questions[0][order_by].isdigit():
-            questions.sort(key=lambda x: int(x[order_by]), reverse=False)
-        else:
-            questions.sort(key=lambda x: x[order_by].title(), reverse=False)
+        cursor.execute("""
+                        SELECT * FROM question
+                        ORDER BY %s ASC;
+                        """ % order_by)
     else:
-        if questions[0][order_by].isdigit():
-            questions.sort(key=lambda x: int(x[order_by]), reverse=True)
-        else:
-            questions.sort(key=lambda x: x[order_by].title(), reverse=True)
+        cursor.execute("""
+                        SELECT * FROM question
+                        ORDER BY %s DESC;
+                        """ % order_by)
+    questions = cursor.fetchall()
 
     return questions
 
