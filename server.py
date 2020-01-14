@@ -20,10 +20,9 @@ def allowed_file(filename):
 
 
 @app.route('/', methods=['GET', 'POST'])
-def loading_page():
-    if request.method == "POST":
-        return redirect('/list')
-    return render_template('loading.html')
+def list_latest_five():
+    questions = data_manager.get_last_five()
+    return render_template('list_latest_five.html', list_of_data = questions)
 
 #DONE
 @app.route('/list', methods=['GET', 'POST'])
