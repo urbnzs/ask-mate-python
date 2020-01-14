@@ -16,6 +16,9 @@ downloads/
 eggs/
 .eggs/
 lib/
+venv/
+sample_data/
+database_common.py
 lib64/
 parts/
 sdist/
