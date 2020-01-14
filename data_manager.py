@@ -33,7 +33,6 @@ def add_new_question(cursor, question):
     cursor.execute("""
                     SELECT id FROM question 
                     WHERE submission_time = %(submission_time)s;""", {'submission_time': question['submission_time']})
-
     id = cursor.fetchall()
     print(id[0]['id'])
     return id[0]['id']
