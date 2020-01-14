@@ -21,8 +21,22 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def list_latest_five():
+    if request.method == 'POST':
+        word = request.form['search']
+        return redirect('/search?q={}'.format(word))
+
     questions = data_manager.get_last_five()
     return render_template('list_latest_five.html', list_of_data = questions)
+
+
+@app.route('/search')
+def search():
+    word = request.args['q']
+    questions = data_manager.search(word)
+    return render_template('list.html', list_of_data = questions, word = word)
+
+
+
 
 #DONE
 @app.route('/list', methods=['GET', 'POST'])
@@ -98,7 +112,9 @@ def edit_answer(id):
         data_manager.edit_answer(id, answer)
         return redirect('/question/' + str(question_id))
     return render_template('edit_answer.html', question=answer, id = id)
-#TODO: Valami nem okés neki a question_id "foreign key"-el
+
+
+
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):
     submission_time = datetime.now()
