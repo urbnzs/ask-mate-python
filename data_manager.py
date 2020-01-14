@@ -152,3 +152,12 @@ def edit_comments(cursor, comment_id, comment):
                     WHERE id = %(comment_id)s; 
                     """, {'message': comment['message'], 'submission_time': comment['submission_time'],
                           'edited_count': comment['edited_count'], 'comment_id': comment_id})
+
+@database_common.connection_handler
+def get_comment_by_id(cursor, id):
+    cursor.execute("""
+                    SELECT * FROM comment
+                    WHERE id = %s;
+                    """ % (id))
+    comments = cursor.fetchall()
+    return comments

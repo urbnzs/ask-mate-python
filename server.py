@@ -155,14 +155,26 @@ def add_new_comment_to_answer(answer_id):
         return redirect('/question/' + str(question_id))
     return render_template('add_comment_to_answer.html', id=answer_id)
 
-#TODO finish
+#TODO edit button next to comments
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
-def edit_comment(comment_id):
+def edit_question_comment(comment_id):
     submission_time = datetime.now()
-    edited_comment = {'submission_time': submission_time}
+    original_comment = data_manager.get_comment_by_id(comment_id)
+    if original_comment[0]['edited_count'] != None:
+        edited_count = int(original_comment[0]['edited_count']) + 1
+    else:
+        edited_count = 1
+    edited_comment = {'submission_time': submission_time, 'edited_count': edited_count}
+    if original_comment[0]['question_id'] != None:
+        question_id = original_comment[0]['question_id']
+    else:
+        answer = connection.answers_by_id(original_comment[0]['answer_id'], False)
+        question_id = answer[0]['question_id']
     if request.method == 'POST':
         edited_comment['message'] = request.form['message']
         data_manager.edit_comments(comment_id, edited_comment)
+        return redirect('/question/' + str(question_id))
+    return render_template('edit_comment.html', comment=original_comment, question_id=question_id)
 
 
 #TODO:Valami baja van ezt se értem

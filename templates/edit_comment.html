@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Comment</title>
+</head>
+<body>
+    <h1>Edit Comment</h1>
+    <form action="/comment/{{ comment[0]['id'] }}/edit" method="post">
+        <label for="message">Message:</label><br>
+        <textarea type="text" id="message" name="message" rows="8" cols="80" required>{{ comment[0]['message'] }}</textarea><br>
+        <button type="submit" enctype="multipart/form-data">Edit Comment</button>
+    </form>
+    <form action="/display_question/{{ question_id }}">
+        <button type="submit">Cancel</button>
+    </form>
+</body>
+</html>
