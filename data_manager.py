@@ -97,3 +97,23 @@ def edit_answer(cursor, id, answer):
                     WHERE id = %(id)s;
                     """, {'id': id, 'message': message, 'image': image})
 
+@database_common.connection_handler
+def get_last_five(cursor):
+    cursor.execute("""
+                    SELECT * FROM question order by submission_time desc LIMIT 5;
+                    """)
+
+    questions = cursor.fetchall()
+    return questions
+
+
+@database_common.connection_handler
+def search(cursor, word):
+    cursor.execute(""" 
+                    SELECT * FROM question
+                    WHERE title  LIKE %(word)%
+                    OR message LIKE %(word)%;
+                        """, {'word' : word})
+
+    questions = cursor.fetchall()
+    return questions
