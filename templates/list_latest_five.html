@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Latest Five</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='letters.css') }}">
+    <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <div class="table-wrap">
+        <table class="table">
+
+            <form action="/list" method="get">
+                <tr>
+                    <th>
+                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/id/asc";'></button>
+                        <h3>ID</h3>
+                        <button class="fas fa-angle-down" onclick='this.form.action="/list/ordered/id/desc";'></button>
+                    </th>
+                    <th>
+                        <button class="fas fa-angle-up"
+                                onclick='this.form.action="/list/ordered/submission_time/asc";'></button>
+                        <h3>Submission Time</h3>
+                        <button class="fas fa-angle-down"
+                                onclick='this.form.action="/list/ordered/submission_time/desc";'></button>
+                    </th>
+                    <th>
+                        <button class="fas fa-angle-up"
+                                onclick='this.form.action="/list/ordered/view_number/asc";'></button>
+                        <h3>View Number</h3>
+                        <button class="fas fa-angle-down"
+                                onclick='this.form.action="/list/ordered/view_number/desc";'></button>
+                    </th>
+                    <th>
+                        <button class="fas fa-angle-up"
+                                onclick='this.form.action="/list/ordered/vote_number/asc";'></button>
+                        <h3>Vote Number</h3>
+                        <button class="fas fa-angle-down"
+                                onclick='this.form.action="/list/ordered/vote_number/desc";'></button>
+                    </th>
+                    <th>
+                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/title/asc";'></button>
+                        <h3>Title</h3>
+                        <button class="fas fa-angle-down"
+                                onclick='this.form.action="/list/ordered/title/desc";'></button>
+                    </th>
+                    <th>
+                        <button class="fas fa-angle-up"
+                                onclick='this.form.action="/list/ordered/message/asc";'></button>
+                        <h3>Message</h3>
+                        <button class="fas fa-angle-down"
+                                onclick='this.form.action="/list/ordered/message/desc";'></button>
+                    </th>
+                    <th>
+                        <h3>Image</h3>
+                    </th>
+                    <th>
+                        <form id="search" method="POST">
+                            <input  type="text" name="search" size="21" maxlength="120"><input type="submit" value="search">
+		                </form>
+                    </th>
+                </tr>
+            </form>
+            {% for line in list_of_data %}
+                <tr>
+                    <td>{{ line['id'] }}</td>
+
+                    <td>{{ line['submission_time'] }}</td>
+
+                    <td>{{ line['view_number'] }}</td>
+
+                    <td>
+                        <form action="/question/{{ line['id'] }}/vote-up">
+                            <button type="submit"><i class="fas fa-angle-up"></i></button>
+                        </form>
+                        {{ line['vote_number'] }}
+                        <form action="/question/{{ line['id'] }}/vote-down">
+                            <button type="submit"><i class="fas fa-angle-down"></i></button>
+                        </form>
+                    </td>
+
+                    <td><a href="/question/{{ line['id'] }}"> {{ line['title'] }} </a></td>
+
+                    <td>{{ line['message'] }}</td>
+
+                    <td><a href="{{ line['image'] }}"><img src="{{ line['image'] }} " height="150" width="150"></a></td>
+
+
+                    <td>
+                        <form action="/question/{{ line['id'] }}/edit">
+                            <button type="submit">Edit Question</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+        <form action="/add-question">
+            <button type="submit">Add New Question</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
