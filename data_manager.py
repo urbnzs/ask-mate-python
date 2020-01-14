@@ -117,3 +117,11 @@ def search(cursor, word):
 
     questions = cursor.fetchall()
     return questions
+
+@database_common.connection_handler
+def add_comment_to_question(cursor, comment):
+    values = ', '.join("'" + str(x) + "'" for x in comment.values())
+    cursor.execute("""
+                          INSERT INTO comment (question_id, message, submission_time, edited_count)
+                          VALUES (%s);
+                           """ % (values))
