@@ -111,11 +111,12 @@ def get_last_five(cursor):
 def search(cursor, word):
     cursor.execute(""" 
                     SELECT * FROM question
-                    WHERE title  LIKE %(word)%
-                    OR message LIKE %(word)%;
-                        """, {'word' : word})
+                    WHERE title  LIKE '%{}%'
+                    OR message LIKE '%{}%';
+                        """.format(word,word))
 
     questions = cursor.fetchall()
+    print(questions)
     return questions
 
 @database_common.connection_handler
