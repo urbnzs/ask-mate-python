@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Comment</title>
+</head>
+<body>
+    <h1>Add a New Comment</h1><br>
+    <form action="/question/{{ id }}/new-comment" method="post" enctype="multipart/form-data">
+
+        <label for="message">Message:</label><br>
+        <textarea type="text" id="message" name="message" rows="8" cols="80" required></textarea><br>
+        <button type="sumbit">Post Answer</button>
+
+    </form>
+
+    <form action="/question/{{ id }}">
+        <button type="submit">Cancel</button>
+    </form>
+
+</body>
+</html>

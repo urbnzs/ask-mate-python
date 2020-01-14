@@ -120,6 +120,16 @@ def add_new_answer(id):
         return redirect('/question/' + str(question_id))
     return render_template('add_answer.html', question=question, id=id)
 
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+def add_new_comment_to_question(question_id):
+    submission_time = datetime.now()
+    new_comment = {'question_id': question_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
+    if request.method == 'POST':
+        new_comment['message'] = request.form['message']
+        data_manager.add_comment_to_question(new_comment)
+        return redirect('/question/' + str(question_id))
+    return render_template('add_comment.html', id=question_id)
+
 #TODO:Valami baja van ezt se értem
 @app.route('/question/<id>/delete')
 def question_delete(id):
