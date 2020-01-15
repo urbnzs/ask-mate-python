@@ -50,10 +50,15 @@ def list_questions():
 def display_question(id):
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
+    answer_ids = [str(answer['id']) for answer in answers]
+    print(answer_ids)
+    answer_comments = data_manager.get_comments_for_multiple_answers(answer_ids)
+    answer_ids_for_answer_comments = [comment['answer_id'] for comment in answer_comments]
     question_id = id
     comments = data_manager.get_comment_by_question_id(id)
     connection.view_number(id)
-    return render_template('display_question.html', question=question, answers=answers, question_id=question_id, comments=comments)
+    return render_template('display_question.html', question=question, answers=answers, question_id=question_id,
+                           comments=comments, answer_comments=answer_comments, answer_ids=answer_ids_for_answer_comments)
 
 #DONE
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -114,7 +119,7 @@ def edit_answer(id):
     return render_template('edit_answer.html', question=answer, id = id)
 
 
-
+#DONE
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):
     submission_time = datetime.now()
@@ -143,6 +148,7 @@ def add_new_comment_to_question(question_id):
         return redirect('/question/' + str(question_id))
     return render_template('add_comment.html', id=question_id)
 
+#DONE
 @app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_answer(answer_id):
     submission_time = datetime.now()
@@ -155,7 +161,7 @@ def add_new_comment_to_answer(answer_id):
         return redirect('/question/' + str(question_id))
     return render_template('add_comment_to_answer.html', id=answer_id)
 
-#TODO edit button next to comments
+#DONE
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
     submission_time = datetime.now()
@@ -168,7 +174,7 @@ def edit_question_comment(comment_id):
     if original_comment[0]['question_id'] != None:
         question_id = original_comment[0]['question_id']
     else:
-        answer = connection.answers_by_id(original_comment[0]['answer_id'], False)
+        answer = data_manager.get_answer_by_id(original_comment[0]['answer_id'])
         question_id = answer[0]['question_id']
     if request.method == 'POST':
         edited_comment['message'] = request.form['message']
@@ -176,8 +182,20 @@ def edit_question_comment(comment_id):
         return redirect('/question/' + str(question_id))
     return render_template('edit_comment.html', comment=original_comment, question_id=question_id)
 
+#DONE
+@app.route('/comment/<comment_id>/delete')
+def delete_comment(comment_id):
+    comment = data_manager.get_comment_by_id(comment_id)
+    print(comment)
+    if comment[0]['question_id'] != None:
+        question_id = comment[0]['question_id']
+    else:
+        answer = data_manager.get_answer_by_id(comment[0]['answer_id'])
+        question_id = answer[0]['question_id']
+    data_manager.delete_comments(comment_id)
+    print(question_id)
+    return redirect('/question/' + str(question_id))
 
-#TODO:Valami baja van ezt se értem
 @app.route('/question/<id>/delete')
 def question_delete(id):
     connection.delete_question(id)

@@ -80,6 +80,8 @@
                 {% else %}
                     <td>Edited 0 times.</td>
                 {% endif %}
+                <td><form action="/comment/{{ comment['id'] }}/edit"><button type="submit">Edit Comment</button></form></td>
+                <td><form action="/comment/{{ comment['id'] }}/delete"><button type="submit">Delete Comment</button></form></td>
             </tr>
         {% endfor %}
     </table>
@@ -87,32 +89,61 @@
         <button type="submit">Add New Comment</button>
     </form>
     <h2>Answers</h2>
-    <table class="table">
-        <tr>
-            <th><h3>ID</h3></th>
-            <th><h3>Submission Time</h3></th>
-            <th><h3>Vote Number</h3></th>
-            <th><h3>Question ID</h3></th>
-            <th><h3>Message</h3></th>
-            <th><h3>Image</h3></th>
-        </tr>
+
 
             {% for item in answers %}
-                <tr>
-                    <td>{{ item['id'] }}</td>
-                    <td>{{ item['submission_time'] }}</td>
-                    <td><form action="/answer/{{ item['id'] }}/vote-up"><button type="submit">∧</button></form>{{ item['vote_number'] }}<form action="/answer/{{ item['id'] }}/vote-down"><button type="submit">v</button></form></td>
-                    <td>{{ item['question_id'] }}</td>
-                    <td>{{ item['message'] }}</td>
-                    <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
-                    <td><form action="/answer/{{ item['id'] }}/delete"><button type="submit">Delete Answer</button></form></td>
-                    <td><form action="/answer/{{ item['id'] }}/edit">
-                            <button type="submit">Edit Answer</button>
-                        </form></td>
-                </tr>
+               <table class="table">
+                    <tr>
+                        <th><h3>ID</h3></th>
+                        <th><h3>Submission Time</h3></th>
+                        <th><h3>Vote Number</h3></th>
+                        <th><h3>Question ID</h3></th>
+                        <th><h3>Message</h3></th>
+                        <th><h3>Image</h3></th>
+                    </tr>
+                    <tr>
+                        <td>{{ item['id'] }}</td>
+                        <td>{{ item['submission_time'] }}</td>
+                        <td><form action="/answer/{{ item['id'] }}/vote-up"><button type="submit">∧</button></form>{{ item['vote_number'] }}<form action="/answer/{{ item['id'] }}/vote-down"><button type="submit">v</button></form></td>
+                        <td>{{ item['question_id'] }}</td>
+                        <td>{{ item['message'] }}</td>
+                        <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
+                        <td><form action="/answer/{{ item['id'] }}/delete"><button type="submit">Delete Answer</button></form></td>
+                        <td><form action="/answer/{{ item['id'] }}/edit">
+                                <button type="submit">Edit Answer</button>
+                            </form></td>
+                    </tr>
+               </table>
+                <form action="/answer/{{ item['id'] }}/new-comment">
+                    <button type="submit">Add New Comment</button>
+                </form>
+                {% if item['id'] in answer_ids %}
+                    <table class="table">
+                        <tr>
+                            <th><h3>Message</h3></th>
+                            <th><h3>Submission Time</h3></th>
+                            <th><h3>Edited Count</h3></th>
+                        </tr>
+                        {% for comment in answer_comments %}
+                            {% if item['id'] == comment['answer_id'] %}
+                                <tr>
+                                    <td>{{ comment['message'] }}</td>
+                                    <td>{{ comment['submission_time'] }}</td>
+                                    {% if comment['edited_count'] != None %}
+                                        <td>Edited {{ comment['edited_count'] }} time(s).</td>
+                                    {% else %}
+                                        <td>Edited 0 times.</td>
+                                    {% endif %}
+                                    <td><form action="/comment/{{ comment['id'] }}/edit"><button type="submit">Edit Comment</button></form></td>
+                                    <td><form action="/comment/{{ comment['id'] }}/delete"><button type="submit">Delete Comment</button></form></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                {% endif %}
             {% endfor %}
 
-    </table>
+
         </div></div>
     <form action="/question/{{ question_id }}/new-answer">
         <button type="submit">Add New Answer</button>
