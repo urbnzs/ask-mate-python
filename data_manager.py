@@ -171,3 +171,23 @@ def get_comment_by_id(cursor, id):
                     """ % (id))
     comments = cursor.fetchall()
     return comments
+
+@database_common.connection_handler
+def get_comments_for_multiple_answers(cursor, answer_ids):
+    if answer_ids != []:
+        answer_id = ', '.join(answer_ids)
+        cursor.execute("""
+                        SELECT * FROM comment
+                        WHERE answer_id IN (%s);
+                        """ % (answer_id))
+        comments = cursor.fetchall()
+        return comments
+    else:
+        return []
+
+@database_common.connection_handler
+def delete_comments(cursor, comment_id):
+    cursor.execute("""
+                    DELETE FROM comment
+                    WHERE id = %s;
+                    """ % (comment_id))
