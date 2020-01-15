@@ -33,7 +33,9 @@ def list_latest_five():
 def search():
     word = request.args['q']
     questions = data_manager.search(word)
-    return render_template('list.html', list_of_data = questions, word = word)
+    for i in range(0, len(questions)):
+        questions[i]['message'] = questions[i]['message'].split(" ")
+    return render_template('search_list.html', list_of_data = questions, word = word)
 
 
 
@@ -196,13 +198,14 @@ def delete_comment(comment_id):
     print(question_id)
     return redirect('/question/' + str(question_id))
 
+#DONE
 @app.route('/question/<id>/delete')
 def question_delete(id):
     connection.delete_question(id)
     connection.delete_answer(id, True)
     return redirect('/list')
 
-#TODO: Valami baja van, nem értem
+#DONE
 @app.route('/answer/<id>/delete')
 def answer_delete(id):
     answer_to_delete = connection.answers_by_id(id, False)
@@ -210,7 +213,7 @@ def answer_delete(id):
     connection.delete_answer(id)
     return redirect('/question/' + str(question_id))
 
-#TODO: ordered list
+#DONE
 @app.route('/list/ordered/<order>/<direct>')
 def list_ordered(order, direct):
     list_of_data = connection.sorting_questions(order, direct)
