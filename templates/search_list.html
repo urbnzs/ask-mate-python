@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Results</title>
+    <title>Search Results</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='letters.css') }}">
     <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
 </head>
@@ -254,10 +254,17 @@
                     </td>
 
                     <td><a href="/question/{{ line['id'] }}"> {{ line['title'] }} </a></td>
-                        {% for item in line['message'] %}
-                            {% if item ==  %}
-                    <td>{{ line['message'] }}</td>
 
+
+                    <td>
+                        {% for item in line['message'] %}
+                            {% if item == word %}
+                                <mark>{{ item }}</mark>
+                            {% else %}
+                                {{ item }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                     <td><a href="{{ line['image'] }}"><img src="{{ line['image'] }} " height="150" width="150"></a></td>
 
 
@@ -271,8 +278,9 @@
 
 
         </table>
-        <form action="/list">
-            <button type="submit">Back to the main page!</button>
+        <form action="/add-question">
+            <button type="submit">Add New Question</button>
         </form>
 </body>
 </html>
+
