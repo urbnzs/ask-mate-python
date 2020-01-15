@@ -116,8 +116,18 @@ def search(cursor, word):
                         """.format(word,word))
 
     questions = cursor.fetchall()
-    print(questions)
     return questions
+
+
+@database_common.connection_handler
+def search_in_comments(cursor, word):
+    cursor.execute("""
+                    SELECT * FROM answer
+                    WHERE message  LIKE '%{}%';
+                        """.format(word))
+
+    answers = cursor.fetchall()
+    return answers
 
 @database_common.connection_handler
 def add_comment_to_question(cursor, comment):

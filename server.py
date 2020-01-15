@@ -35,7 +35,18 @@ def search():
     questions = data_manager.search(word)
     for i in range(0, len(questions)):
         questions[i]['message'] = questions[i]['message'].split(" ")
-    return render_template('search_list.html', list_of_data = questions, word = word)
+
+    answers = data_manager.search_in_comments(word)
+    for i in range(0, len(answers)):
+        answers[i]['message'] = answers[i]['message'].split(" ")
+
+    for item in answers:
+        print(item)
+        if item['question_id'] not in questions:
+            questions.append(data_manager.get_question_by_id(item['question_id']))
+
+
+    return render_template('search_list.html', list_of_questions = questions,list_of_answers = answers,  word = word)
 
 
 
