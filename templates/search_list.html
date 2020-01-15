@@ -115,10 +115,7 @@
 
                     <td>{{ line['submission_time'] }}</td>
 
-                    <td>{{ line['view_number'] }}</td>
-                
-                    <td><a href="/question/{{ line['id'] }}"> {{ line['title'] }} </a></td>
-
+                    <td>{{ line['vote_number'] }}</td>
 
                     <td>
                         {% for item in line['message'] %}
@@ -131,12 +128,6 @@
                     </td>
                     <td><a href="{{ line['image'] }}"><img src="{{ line['image'] }} " height="150" width="150"></a></td>
 
-
-                    <td>
-                        <form action="/question/{{ line['id'] }}/edit">
-                            <button type="submit">Edit Question</button>
-                        </form>
-                    </td>
                 </tr>
             {% endfor %}
         </table>

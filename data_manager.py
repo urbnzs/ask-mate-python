@@ -120,7 +120,7 @@ def search(cursor, word):
 
 
 @database_common.connection_handler
-def search_in_comments(cursor, word):
+def search_in_answers(cursor, word):
     cursor.execute("""
                     SELECT * FROM answer
                     WHERE message  LIKE '%{}%';
@@ -191,3 +191,18 @@ def delete_comments(cursor, comment_id):
                     DELETE FROM comment
                     WHERE id = %s;
                     """ % (comment_id))
+
+
+@database_common.connection_handler
+def get_questions_for_multiple_answers(cursor, answer_ids):
+    if answer_ids != []:
+        answer_id = ', '.join(answer_ids)
+        cursor.execute("""
+                        SELECT * FROM question
+                        WHERE id IN (%s);
+                        """ % (answer_id))
+        questions = cursor.fetchall()
+        return questions
+    else:
+        return []
+
