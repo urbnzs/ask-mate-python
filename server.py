@@ -73,14 +73,15 @@ def display_question(id):
     question = connection.get_question_by_id(id)
     answers = connection.answers_by_id(id)
     answer_ids = [str(answer['id']) for answer in answers]
-    print(answer_ids)
     answer_comments = data_manager.get_comments_for_multiple_answers(answer_ids)
     answer_ids_for_answer_comments = [comment['answer_id'] for comment in answer_comments]
     question_id = id
     comments = data_manager.get_comment_by_question_id(id)
     connection.view_number(id)
+    tags = data_manager.get_tag_name_by_question_id(id)
     return render_template('display_question.html', question=question, answers=answers, question_id=question_id,
-                           comments=comments, answer_comments=answer_comments, answer_ids=answer_ids_for_answer_comments)
+                           comments=comments, answer_comments=answer_comments, answer_ids=answer_ids_for_answer_comments,
+                            tags=tags)
 
 
 #DONE
@@ -222,16 +223,43 @@ def delete_comment(comment_id):
 #DONE
 @app.route('/question/<id>/delete')
 def question_delete(id):
-    connection.delete_question(id)
+    data_manager.delete_comment_by_question_id(id)
+    answers = connection.answers_by_id(id)
+    for answer in answers:
+        data_manager.delete_comment_by_answer_id(answer['id'])
     connection.delete_answer(id, True)
+    connection.delete_question(id)
     return redirect('/list')
 
 #DONE
 @app.route('/answer/<id>/delete')
 def answer_delete(id):
     answer_to_delete = connection.answers_by_id(id, False)
+    data_manager.delete_comment_by_answer_id(id)
     question_id = answer_to_delete[0]['question_id']
     connection.delete_answer(id)
+    return redirect('/question/' + str(question_id))
+
+#DONE
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def add_new_tag(question_id):
+    tags = data_manager.get_all_tags()
+    if request.method == 'POST':
+        existing_tag = request.form['existing_tag']
+        if existing_tag == "add_new_tag":
+            new_tag = request.form["new_tag"]
+            new_tag_id = data_manager.add_new_tag(new_tag)
+            data_manager.add_new_tag_to_question(new_tag_id, question_id)
+        else:
+            existing_tag_id = data_manager.get_tag_id_by_name(existing_tag)
+            data_manager.add_new_tag_to_question(existing_tag_id, question_id)
+        return redirect('/question/' + str(question_id))
+    return render_template('new_tag.html', question_id=question_id, tags=tags)
+
+#DONE
+@app.route('/question/<question_id>/tag/<tag_id>/delete')
+def delete_tag(question_id, tag_id):
+    data_manager.delete_tags_by_question(question_id, tag_id)
     return redirect('/question/' + str(question_id))
 
 #DONE

@@ -145,6 +145,20 @@ def get_comment_by_question_id(cursor, question_id):
     return comments
 
 @database_common.connection_handler
+def delete_comment_by_answer_id(cursor, answer_id):
+    cursor.execute(""" 
+                    DELETE FROM comment
+                    WHERE answer_id = %s;
+                    """ % (answer_id))
+
+@database_common.connection_handler
+def delete_comment_by_question_id(cursor, question_id):
+    cursor.execute("""
+                    DELETE FROM comment
+                    WHERE question_id = %s;
+                    """ % (question_id))
+
+@database_common.connection_handler
 def add_comment_to_answer(cursor, comment):
     values = ', '.join("'" + str(x) + "'" for x in comment.values())
     cursor.execute("""
@@ -190,6 +204,90 @@ def delete_comments(cursor, comment_id):
                     WHERE id = %s;
                     """ % (comment_id))
 
+@database_common.connection_handler
+def get_all_tags(cursor):
+    cursor.execute("""
+                    SELECT * FROM tag;
+                    """)
+    tags = cursor.fetchall()
+    return tags
+
+@database_common.connection_handler
+def get_tags_by_question(cursor, question_id):
+    cursor.execute("""
+                    SELECT * FROM question_tag
+                    WHERE question_id = %s;
+                    """ % question_id)
+    tags = cursor.fetchall()
+    return tags
+
+@database_common.connection_handler
+def add_new_tag(cursor, new_tag):
+    cursor.execute("""
+                    INSERT INTO tag (name)
+                    VALUES (%(new_tag)s);
+                    """, {'new_tag': new_tag})
+    cursor.execute("""
+                    SELECT * FROM tag
+                    WHERE name = %(new_tag)s;
+                    """, {'new_tag': new_tag})
+    tag_ = cursor.fetchall()
+    tag_id = tag_[0]['id']
+    return tag_id
+
+@database_common.connection_handler
+def add_new_tag_to_question(cursor, tag_id, question_id):
+    cursor.execute("""
+                    DELETE FROM question_tag
+                    WHERE question_id=%(question_id)s 
+                    AND tag_id=%(tag_id)s;
+                    """, {'question_id': question_id, 'tag_id': tag_id})
+    cursor.execute("""
+                    INSERT INTO question_tag (question_id, tag_id)
+                    VALUES (%(question_id)s, %(tag_id)s);
+                    """, {'question_id': question_id, 'tag_id': tag_id})
+
+@database_common.connection_handler
+def get_tag_id_by_name(cursor, tag_name):
+    cursor.execute("""
+                    SELECT id FROM tag
+                    WHERE name=%(tag_name)s;
+                    """, {'tag_name': tag_name})
+    tag_id = cursor.fetchall()
+    return tag_id[0]['id']
+
+@database_common.connection_handler
+def get_tag_names_by_tag_ids(cursor, tag_ids):
+    if tag_ids != []:
+        tag_id = ', '.join(tag_ids)
+        cursor.execute("""
+                        SELECT * FROM tag
+                        WHERE id IN (%s);
+                        """ % (tag_id))
+        tags = cursor.fetchall()
+        return tags
+    else:
+        return []
+
+@database_common.connection_handler
+def get_tag_name_by_question_id(cursor, question_id):
+    cursor.execute("""
+                    SELECT tag_id FROM question_tag
+                    WHERE question_id=%(question_id)s;
+                    """, {'question_id': question_id})
+    tag_ids_dict = cursor.fetchall()
+    tag_ids = [str(tag['tag_id']) for tag in tag_ids_dict]
+    tags = get_tag_names_by_tag_ids(tag_ids)
+    return tags
+
+@database_common.connection_handler
+def delete_tags_by_question(cursor, question_id, tag_id):
+    cursor.execute("""
+                    DELETE FROM question_tag
+                    WHERE tag_id = %(tag_id)s 
+                    AND question_id = %(question_id)s; 
+                    """, {'tag_id' : tag_id, 'question_id': question_id})
+
 
 @database_common.connection_handler
 def get_questions_for_multiple_answers(cursor, answer_ids):
@@ -203,4 +301,3 @@ def get_questions_for_multiple_answers(cursor, answer_ids):
         return questions
     else:
         return []
-
