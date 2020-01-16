@@ -7,35 +7,23 @@
 </head>
 <body>
 <div class='centerplease'>
-    {{ question[0]['title'] }}
+    <h1>{{ question[0]['title'] }}</h1>
 </div>
 <br>
 <br>
 <div class='centerpleaseMessage'>
-    {{ question[0]['message'] }}
+    <h4>{{ question[0]['message'] }}</h4>
 </div>
 <h2>Tags</h2>
 {% if tags != [] %}
     {% for tag in tags %}
-        {{ tag['name'] }} <a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">X</a><br>
+        <h5>{{ tag['name'] }} <a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">X</a></h5>
     {% endfor %}
 {% else %}
-    <h4>No tags yet.</h4>
+    <h5>No tags yet.</h5>
 {% endif %}
-<form action="/question/{{ question_id }}/new-tag" method="post">
-
-    <label for="existing_tag">Or select from existing tags:</label><br>
-    <select id="existing_tag" name="existing_tag">
-        <option value="add_new_tag">-</option>
-        {% for tag in tags %}
-            <option value="{{ tag['name'] }}">{{ tag['name'] }}</option>
-        {% endfor %}
-    </select><br>
-
-    <label for="new_tag">Describe new tag:</label><br>
-    <input type="text" id="new_tag" name="new_tag"><br>
-    <button type="sumbit">Post Tag</button>
-
+<form action="/question/{{ question_id }}/new-tag">
+    <button type="submit">Add New Tag</button>
 </form>
 <br>
 <div class="content">
@@ -67,13 +55,14 @@
                     </form>
                 </td>
                 <td>
-                    <form action="/comment/{{ comment['id'] }}/add">
-                        <button type="submit">Add Comment</button>
-                    </form>
+
                 </td>
             {% endfor %}
         {% endif %}
         </table>
+        <form action="/question/{{ question_id }}/new-comment">
+            <button type="submit">Add Comment</button>
+        </form>
         </div>
     </div>
 </div>

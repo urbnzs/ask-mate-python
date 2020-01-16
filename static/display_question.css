@@ -247,3 +247,65 @@ button:active {
 	position:relative;
 	top:1px;
 }
+
+h1 {
+    font-size: 1em;
+    font-weight: 300;
+    line-height: 1em;
+    text-align: center;
+    color: #4DC3FA;
+}
+
+h2 {
+    font-size: 1em;
+    font-weight: 300;
+    display: block;
+    line-height: 1em;
+    color: #FB667A;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 300;
+    text-align: center;
+    display: block;
+    line-height: 1em;
+    font-weight: bold;
+    color: #A7A1AE;
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: 300;
+    text-align: center;
+    display: block;
+    line-height: 1em;
+    color: #A7A1AE;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #A7A1AE;
+}
+
+/* unvisited link */
+a:link {
+  color: #FB667A;
+}
+
+/* visited link */
+a:visited {
+  color: #FB667A;
+}
+
+/* mouse over link */
+a:hover {
+  color: #0E1119;
+}
+
+/* selected link */
+a:active {
+  color: #0E1119;
+}
