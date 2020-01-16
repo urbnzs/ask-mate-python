@@ -26,7 +26,7 @@ def list_latest_five():
         return redirect('/search?q={}'.format(word))
 
     questions = data_manager.get_last_five()
-    return render_template('list_latest_five.html', list_of_data=questions)
+    return render_template('list_latest_five.html', list_of_data = questions)
 
 
 @app.route('/search')
@@ -229,6 +229,10 @@ def delete_comment(comment_id):
 # DONE
 @app.route('/question/<id>/delete')
 def question_delete(id):
+    tag_ids = data_manager.get_tags_by_question(id)
+    if tag_ids != []:
+        for tag in tag_ids:
+            data_manager.delete_tags_by_question(id, tag['tag_id'])
     data_manager.delete_comment_by_question_id(id)
     answers = connection.answers_by_id(id)
     for answer in answers:
