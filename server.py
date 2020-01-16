@@ -33,11 +33,30 @@ def list_latest_five():
 def search():
     word = request.args['q']
     questions = data_manager.search(word)
-    for i in range(0, len(questions)):
-        questions[i]['message'] = questions[i]['message'].split(" ")
-    return render_template('search_list.html', list_of_data = questions, word = word)
+    answers = data_manager.search_in_answers(word)
+    return_questions = []
+
+    question_ids = [str(answer['question_id']) for answer in answers]
+
+    questions.append(dict(data_manager.get_questions_for_multiple_answers(question_ids)[0]))
+
+    for item in questions:
+        item['message'] = item['message'].split(" ")
+        item['title'] = item['title'].split(" ")
 
 
+    for i in questions:
+        if i not in return_questions:
+            return_questions.append(i)
+
+
+    for item in answers:
+        item['message'] = item['message'].split(" ")
+
+    print("Questionok: " + str(questions))
+    print("Answerek: " + str(answers))
+
+    return render_template('search_list.html', list_of_questions = return_questions, word = word, list_of_answers = answers)
 
 
 #DONE
@@ -46,6 +65,7 @@ def list_questions():
     questions = data_manager.list_questions()
 
     return render_template('list.html', list_of_data=questions)
+
 
 #DONE
 @app.route('/question/<id>')
@@ -62,6 +82,7 @@ def display_question(id):
     return render_template('display_question.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments, answer_ids=answer_ids_for_answer_comments,
                             tags=tags)
+
 
 #DONE
 @app.route('/add-question', methods=['GET', 'POST'])

@@ -44,7 +44,7 @@ def get_question_by_id(cursor,id):
 
 @database_common.connection_handler
 def get_answer_by_id(cursor, id):
-    print(id)
+
     cursor.execute("""
                     SELECT * FROM answer
                     WHERE id = %(id)s
@@ -52,7 +52,6 @@ def get_answer_by_id(cursor, id):
                     """, {'id': id})
 
     answer = cursor.fetchall()
-    print(answer)
     return answer
 
 
@@ -69,7 +68,6 @@ def list_questions(cursor):
 
 @database_common.connection_handler
 def edit_question(cursor, id, question):
-    print(question)
     title = question[0]['title']
     message = question[0]['message']
     image = question[0]['image']
@@ -111,13 +109,23 @@ def get_last_five(cursor):
 def search(cursor, word):
     cursor.execute(""" 
                     SELECT * FROM question
-                    WHERE title  LIKE '%{}%'
-                    OR message LIKE '%{}%';
-                        """.format(word,word))
+                    WHERE title  LIKE '{}'
+                    OR message LIKE '{}';
+                        """.format(word, word))
 
     questions = cursor.fetchall()
-    print(questions)
     return questions
+
+
+@database_common.connection_handler
+def search_in_answers(cursor, word):
+    cursor.execute("""
+                    SELECT * FROM answer
+                    WHERE message  LIKE '%{}%';
+                        """.format(word))
+
+    answers = cursor.fetchall()
+    return answers
 
 @database_common.connection_handler
 def add_comment_to_question(cursor, comment):
@@ -279,3 +287,17 @@ def delete_tags_by_question(cursor, question_id, tag_id):
                     WHERE tag_id = %(tag_id)s 
                     AND question_id = %(question_id)s; 
                     """, {'tag_id' : tag_id, 'question_id': question_id})
+
+
+@database_common.connection_handler
+def get_questions_for_multiple_answers(cursor, answer_ids):
+    if answer_ids != []:
+        answer_id = ', '.join(answer_ids)
+        cursor.execute("""
+                        SELECT * FROM question
+                        WHERE id IN (%s);
+                        """ % (answer_id))
+        questions = cursor.fetchall()
+        return questions
+    else:
+        return []
