@@ -13,48 +13,48 @@
 
             <form action="/list" method="get">
                 <thead>
-                    <th>
-                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/id/asc";'></button>
-                        <h3>ID</h3>
-                        <button class="fas fa-angle-down" onclick='this.form.action="/list/ordered/id/desc";'></button>
-                    </th>
-                    <th>
-                        <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/submission_time/asc";'></button>
-                        <h3>Submission Time</h3>
-                        <button class="fas fa-angle-down"
-                                onclick='this.form.action="/list/ordered/submission_time/desc";'></button>
-                    </th>
-                    <th>
-                        <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/view_number/asc";'></button>
-                        <h3>View Number</h3>
-                        <button class="fas fa-angle-down"
-                                onclick='this.form.action="/list/ordered/view_number/desc";'></button>
-                    </th>
-                    <th>
-                        <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/vote_number/asc";'></button>
-                        <h3>Vote Number</h3>
-                        <button class="fas fa-angle-down"
-                                onclick='this.form.action="/list/ordered/vote_number/desc";'></button>
-                    </th>
-                    <th>
-                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/title/asc";'></button>
-                        <h3>Title</h3>
-                        <button class="fas fa-angle-down"
-                                onclick='this.form.action="/list/ordered/title/desc";'></button>
-                    </th>
-                    <th>
-                        <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/message/asc";'></button>
-                        <h3>Message</h3>
-                        <button class="fas fa-angle-down"
-                                onclick='this.form.action="/list/ordered/message/desc";'></button>
-                    </th>
-                    <th>
-                        <h3>Image</h3>
-                    </th>
+                <th>
+                    <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/id/asc";'></button>
+                    <h3>ID</h3>
+                    <button class="fas fa-angle-down" onclick='this.form.action="/list/ordered/id/desc";'></button>
+                </th>
+                <th>
+                    <button class="fas fa-angle-up"
+                            onclick='this.form.action="/list/ordered/submission_time/asc";'></button>
+                    <h3>Submission Time</h3>
+                    <button class="fas fa-angle-down"
+                            onclick='this.form.action="/list/ordered/submission_time/desc";'></button>
+                </th>
+                <th>
+                    <button class="fas fa-angle-up"
+                            onclick='this.form.action="/list/ordered/view_number/asc";'></button>
+                    <h3>View Number</h3>
+                    <button class="fas fa-angle-down"
+                            onclick='this.form.action="/list/ordered/view_number/desc";'></button>
+                </th>
+                <th>
+                    <button class="fas fa-angle-up"
+                            onclick='this.form.action="/list/ordered/vote_number/asc";'></button>
+                    <h3>Vote Number</h3>
+                    <button class="fas fa-angle-down"
+                            onclick='this.form.action="/list/ordered/vote_number/desc";'></button>
+                </th>
+                <th>
+                    <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/title/asc";'></button>
+                    <h3>Title</h3>
+                    <button class="fas fa-angle-down"
+                            onclick='this.form.action="/list/ordered/title/desc";'></button>
+                </th>
+                <th>
+                    <button class="fas fa-angle-up"
+                            onclick='this.form.action="/list/ordered/message/asc";'></button>
+                    <h3>Message</h3>
+                    <button class="fas fa-angle-down"
+                            onclick='this.form.action="/list/ordered/message/desc";'></button>
+                </th>
+                <th>
+                    <h3>Image</h3>
+                </th>
                 </thead>
             </form>
             {% for line in list_of_data %}
@@ -92,9 +92,9 @@
 
 
         </table>
-        <form  method="post">
+        <form method="post">
             <input type="text" id="search" name="search">
-            <button type="submit" >Search</button>
+            <button type="submit">Search</button>
         </form>
         <form action="/add-question">
             <button type="submit">Add New Question</button>

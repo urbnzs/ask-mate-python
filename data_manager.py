@@ -2,7 +2,6 @@ import csv
 import database_common
 
 
-
 @database_common.connection_handler
 def add_new_question(cursor, question):
     values = ', '.join("'" + str(x) + "'" for x in question.values())
@@ -15,6 +14,7 @@ def add_new_question(cursor, question):
                     WHERE submission_time = %(submission_time)s;""", {'submission_time': question['submission_time']})
     id = cursor.fetchall()
     return id[0]['id']
+
 
 @database_common.connection_handler
 def add_new_answer(cursor, answer):
@@ -30,13 +30,15 @@ def add_new_answer(cursor, answer):
 
     id = cursor.fetchall()
     return id[0]['id']
+
+
 @database_common.connection_handler
-def get_question_by_id(cursor,id):
+def get_question_by_id(cursor, id):
     cursor.execute("""
                     SELECT * FROM question
                     where id = %(id)s;
     
-                    """, {'id' : id})
+                    """, {'id': id})
 
     question = cursor.fetchall()
     return question
@@ -44,7 +46,6 @@ def get_question_by_id(cursor,id):
 
 @database_common.connection_handler
 def get_answer_by_id(cursor, id):
-
     cursor.execute("""
                     SELECT * FROM answer
                     WHERE id = %(id)s
@@ -66,6 +67,7 @@ def list_questions(cursor):
 
     return questions
 
+
 @database_common.connection_handler
 def edit_question(cursor, id, question):
     title = question[0]['title']
@@ -78,13 +80,11 @@ def edit_question(cursor, id, question):
                         message = %(message)s,
                         image = %(image)s
                     WHERE id = %(id)s;
-                    """, {'id': id, 'title' : title, 'message': message, 'image': image})
+                    """, {'id': id, 'title': title, 'message': message, 'image': image})
 
 
 @database_common.connection_handler
 def edit_answer(cursor, id, answer):
-
-
     message = answer[0]['message']
     image = answer[0]['image']
     cursor.execute("""
@@ -94,6 +94,7 @@ def edit_answer(cursor, id, answer):
                         image = %(image)s
                     WHERE id = %(id)s;
                     """, {'id': id, 'message': message, 'image': image})
+
 
 @database_common.connection_handler
 def get_last_five(cursor):
@@ -127,6 +128,7 @@ def search_in_answers(cursor, word):
     answers = cursor.fetchall()
     return answers
 
+
 @database_common.connection_handler
 def add_comment_to_question(cursor, comment):
     values = ', '.join("'" + str(x) + "'" for x in comment.values())
@@ -134,6 +136,7 @@ def add_comment_to_question(cursor, comment):
                           INSERT INTO comment (question_id, message, submission_time, edited_count)
                           VALUES (%s);
                            """ % (values))
+
 
 @database_common.connection_handler
 def get_comment_by_question_id(cursor, question_id):
@@ -144,12 +147,14 @@ def get_comment_by_question_id(cursor, question_id):
     comments = cursor.fetchall()
     return comments
 
+
 @database_common.connection_handler
 def delete_comment_by_answer_id(cursor, answer_id):
     cursor.execute(""" 
                     DELETE FROM comment
                     WHERE answer_id = %s;
                     """ % (answer_id))
+
 
 @database_common.connection_handler
 def delete_comment_by_question_id(cursor, question_id):
@@ -158,6 +163,7 @@ def delete_comment_by_question_id(cursor, question_id):
                     WHERE question_id = %s;
                     """ % (question_id))
 
+
 @database_common.connection_handler
 def add_comment_to_answer(cursor, comment):
     values = ', '.join("'" + str(x) + "'" for x in comment.values())
@@ -165,6 +171,7 @@ def add_comment_to_answer(cursor, comment):
                           INSERT INTO comment (answer_id, message, submission_time, edited_count)
                           VALUES (%s);
                            """ % (values))
+
 
 @database_common.connection_handler
 def edit_comments(cursor, comment_id, comment):
@@ -175,6 +182,7 @@ def edit_comments(cursor, comment_id, comment):
                     """, {'message': comment['message'], 'submission_time': comment['submission_time'],
                           'edited_count': comment['edited_count'], 'comment_id': comment_id})
 
+
 @database_common.connection_handler
 def get_comment_by_id(cursor, id):
     cursor.execute("""
@@ -183,6 +191,7 @@ def get_comment_by_id(cursor, id):
                     """ % (id))
     comments = cursor.fetchall()
     return comments
+
 
 @database_common.connection_handler
 def get_comments_for_multiple_answers(cursor, answer_ids):
@@ -197,12 +206,14 @@ def get_comments_for_multiple_answers(cursor, answer_ids):
     else:
         return []
 
+
 @database_common.connection_handler
 def delete_comments(cursor, comment_id):
     cursor.execute("""
                     DELETE FROM comment
                     WHERE id = %s;
                     """ % (comment_id))
+
 
 @database_common.connection_handler
 def get_all_tags(cursor):
@@ -212,6 +223,7 @@ def get_all_tags(cursor):
     tags = cursor.fetchall()
     return tags
 
+
 @database_common.connection_handler
 def get_tags_by_question(cursor, question_id):
     cursor.execute("""
@@ -220,6 +232,7 @@ def get_tags_by_question(cursor, question_id):
                     """ % question_id)
     tags = cursor.fetchall()
     return tags
+
 
 @database_common.connection_handler
 def add_new_tag(cursor, new_tag):
@@ -235,6 +248,7 @@ def add_new_tag(cursor, new_tag):
     tag_id = tag_[0]['id']
     return tag_id
 
+
 @database_common.connection_handler
 def add_new_tag_to_question(cursor, tag_id, question_id):
     cursor.execute("""
@@ -247,6 +261,7 @@ def add_new_tag_to_question(cursor, tag_id, question_id):
                     VALUES (%(question_id)s, %(tag_id)s);
                     """, {'question_id': question_id, 'tag_id': tag_id})
 
+
 @database_common.connection_handler
 def get_tag_id_by_name(cursor, tag_name):
     cursor.execute("""
@@ -255,6 +270,7 @@ def get_tag_id_by_name(cursor, tag_name):
                     """, {'tag_name': tag_name})
     tag_id = cursor.fetchall()
     return tag_id[0]['id']
+
 
 @database_common.connection_handler
 def get_tag_names_by_tag_ids(cursor, tag_ids):
@@ -269,6 +285,7 @@ def get_tag_names_by_tag_ids(cursor, tag_ids):
     else:
         return []
 
+
 @database_common.connection_handler
 def get_tag_name_by_question_id(cursor, question_id):
     cursor.execute("""
@@ -280,13 +297,14 @@ def get_tag_name_by_question_id(cursor, question_id):
     tags = get_tag_names_by_tag_ids(tag_ids)
     return tags
 
+
 @database_common.connection_handler
 def delete_tags_by_question(cursor, question_id, tag_id):
     cursor.execute("""
                     DELETE FROM question_tag
                     WHERE tag_id = %(tag_id)s 
                     AND question_id = %(question_id)s; 
-                    """, {'tag_id' : tag_id, 'question_id': question_id})
+                    """, {'tag_id': tag_id, 'question_id': question_id})
 
 
 @database_common.connection_handler

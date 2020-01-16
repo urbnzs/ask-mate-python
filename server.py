@@ -44,11 +44,9 @@ def search():
         item['message'] = item['message'].split(" ")
         item['title'] = item['title'].split(" ")
 
-
     for i in questions:
         if i not in return_questions:
             return_questions.append(i)
-
 
     for item in answers:
         item['message'] = item['message'].split(" ")
@@ -56,10 +54,10 @@ def search():
     print("Questionok: " + str(questions))
     print("Answerek: " + str(answers))
 
-    return render_template('search_list.html', list_of_questions = return_questions, word = word, list_of_answers = answers)
+    return render_template('search_list.html', list_of_questions=return_questions, word=word, list_of_answers=answers)
 
 
-#DONE
+# DONE
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
     questions = data_manager.list_questions()
@@ -67,7 +65,7 @@ def list_questions():
     return render_template('list.html', list_of_data=questions)
 
 
-#DONE
+# DONE
 @app.route('/question/<id>')
 def display_question(id):
     question = connection.get_question_by_id(id)
@@ -80,17 +78,18 @@ def display_question(id):
     connection.view_number(id)
     tags = data_manager.get_tag_name_by_question_id(id)
     return render_template('display_question.html', question=question, answers=answers, question_id=question_id,
-                           comments=comments, answer_comments=answer_comments, answer_ids=answer_ids_for_answer_comments,
-                            tags=tags)
+                           comments=comments, answer_comments=answer_comments,
+                           answer_ids=answer_ids_for_answer_comments,
+                           tags=tags)
 
 
-#DONE
+# DONE
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     submission_time = datetime.now()
     view_num = 0
     vote_num = 0
-    new_question = {'submission_time' : submission_time,'view_number' : view_num, 'vote_number' :vote_num,
+    new_question = {'submission_time': submission_time, 'view_number': view_num, 'vote_number': vote_num,
                     'title': None, 'message': None, 'image': None}
     if request.method == 'POST':
         new_question['title'] = request.form['title']
@@ -103,7 +102,8 @@ def add_question():
         return redirect('/question/' + str(id_))
     return render_template('add_q.html')
 
-#DONE
+
+# DONE
 @app.route('/question/<id>/edit', methods=['GET', 'POST'])
 def edit_question(id):
     question = data_manager.get_question_by_id(id)
@@ -112,7 +112,6 @@ def edit_question(id):
         message = request.form['message']
         file = request.files['file']
         if file and allowed_file(file.filename):
-
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             question['image'] = "/static/{}".format(file.filename)
 
@@ -121,8 +120,10 @@ def edit_question(id):
 
         data_manager.edit_question(id, question)
         return redirect('/question/' + str(id))
-    return render_template('edit_question.html', question=question, id = id)
-#DONE
+    return render_template('edit_question.html', question=question, id=id)
+
+
+# DONE
 @app.route('/answer/<id>/edit', methods=['GET', 'POST'])
 def edit_answer(id):
     answer = data_manager.get_answer_by_id(id)
@@ -132,7 +133,6 @@ def edit_answer(id):
         file = request.files['file']
         submission_time = datetime.now()
         if file and allowed_file(file.filename):
-
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
             answer[0]['image'] = "/static/{}".format(file.filename)
 
@@ -140,17 +140,18 @@ def edit_answer(id):
 
         data_manager.edit_answer(id, answer)
         return redirect('/question/' + str(question_id))
-    return render_template('edit_answer.html', question=answer, id = id)
+    return render_template('edit_answer.html', question=answer, id=id)
 
 
-#DONE
+# DONE
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):
     submission_time = datetime.now()
     vote_num = 0
     question_id = id
     question = data_manager.get_question_by_id(question_id)
-    new_answer = {'submission_time' : submission_time, 'vote_number' : vote_num, 'question_id' : question_id,'message' : None, 'image' : None}
+    new_answer = {'submission_time': submission_time, 'vote_number': vote_num, 'question_id': question_id,
+                  'message': None, 'image': None}
     if request.method == 'POST':
         new_answer['message'] = request.form['message']
         file = request.files['file']
@@ -161,7 +162,8 @@ def add_new_answer(id):
         return redirect('/question/' + str(question_id))
     return render_template('add_answer.html', question=question, id=id)
 
-#DONE
+
+# DONE
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_question(question_id):
     submission_time = datetime.now()
@@ -172,7 +174,8 @@ def add_new_comment_to_question(question_id):
         return redirect('/question/' + str(question_id))
     return render_template('add_comment.html', id=question_id)
 
-#DONE
+
+# DONE
 @app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_answer(answer_id):
     submission_time = datetime.now()
@@ -185,7 +188,8 @@ def add_new_comment_to_answer(answer_id):
         return redirect('/question/' + str(question_id))
     return render_template('add_comment_to_answer.html', id=answer_id)
 
-#DONE
+
+# DONE
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
     submission_time = datetime.now()
@@ -206,7 +210,8 @@ def edit_question_comment(comment_id):
         return redirect('/question/' + str(question_id))
     return render_template('edit_comment.html', comment=original_comment, question_id=question_id)
 
-#DONE
+
+# DONE
 @app.route('/comment/<comment_id>/delete')
 def delete_comment(comment_id):
     comment = data_manager.get_comment_by_id(comment_id)
@@ -220,7 +225,8 @@ def delete_comment(comment_id):
     print(question_id)
     return redirect('/question/' + str(question_id))
 
-#TODO: delete tags with question
+
+# DONE
 @app.route('/question/<id>/delete')
 def question_delete(id):
     tag_ids = data_manager.get_tags_by_question(id)
@@ -235,7 +241,8 @@ def question_delete(id):
     connection.delete_question(id)
     return redirect('/list')
 
-#DONE
+
+# DONE
 @app.route('/answer/<id>/delete')
 def answer_delete(id):
     answer_to_delete = connection.answers_by_id(id, False)
@@ -244,7 +251,8 @@ def answer_delete(id):
     connection.delete_answer(id)
     return redirect('/question/' + str(question_id))
 
-#DONE
+
+# DONE
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
 def add_new_tag(question_id):
     tags = data_manager.get_all_tags()
@@ -260,31 +268,36 @@ def add_new_tag(question_id):
         return redirect('/question/' + str(question_id))
     return render_template('new_tag.html', question_id=question_id, tags=tags)
 
-#DONE
+
+# DONE
 @app.route('/question/<question_id>/tag/<tag_id>/delete')
 def delete_tag(question_id, tag_id):
     data_manager.delete_tags_by_question(question_id, tag_id)
     return redirect('/question/' + str(question_id))
 
-#DONE
+
+# DONE
 @app.route('/list/ordered/<order>/<direct>')
 def list_ordered(order, direct):
     list_of_data = connection.sorting_questions(order, direct)
     return render_template('list.html', list_of_data=list_of_data)
 
-#DONE
+
+# DONE
 @app.route('/question/<question_id>/vote-up')
 def vote_up_question(question_id):
     connection.voting_question(question_id, True)
     return redirect('/list')
 
-#DONE
+
+# DONE
 @app.route('/question/<question_id>/vote-down')
 def vote_down_question(question_id):
     connection.voting_question(question_id, False)
     return redirect('/list')
 
-#DONE
+
+# DONE
 @app.route('/answer/<answer_id>/vote-up')
 def vote_up_answer(answer_id):
     connection.voting_answers(answer_id, True)
@@ -292,7 +305,8 @@ def vote_up_answer(answer_id):
     question_id = voted_answer[0]['question_id']
     return redirect('/question/' + str(question_id))
 
-#DONE
+
+# DONE
 @app.route('/answer/<answer_id>/vote-down')
 def vote_down_answer(answer_id):
     connection.voting_answers(answer_id, False)
