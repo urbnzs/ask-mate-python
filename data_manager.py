@@ -237,6 +237,10 @@ def get_tags_by_question(cursor, question_id):
 @database_common.connection_handler
 def add_new_tag(cursor, new_tag):
     cursor.execute("""
+                    DELETE FROM tag
+                    WHERE name = %(new_tag)s;
+                    """, {'new_tag': new_tag})
+    cursor.execute("""
                     INSERT INTO tag (name)
                     VALUES (%(new_tag)s);
                     """, {'new_tag': new_tag})
