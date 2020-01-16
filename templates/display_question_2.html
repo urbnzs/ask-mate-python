@@ -22,18 +22,59 @@
 {% else %}
     <h4>No tags yet.</h4>
 {% endif %}
+<form action="/question/{{ question_id }}/new-tag" method="post">
+
+    <label for="existing_tag">Or select from existing tags:</label><br>
+    <select id="existing_tag" name="existing_tag">
+        <option value="add_new_tag">-</option>
+        {% for tag in tags %}
+            <option value="{{ tag['name'] }}">{{ tag['name'] }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label for="new_tag">Describe new tag:</label><br>
+    <input type="text" id="new_tag" name="new_tag"><br>
+    <button type="sumbit">Post Tag</button>
+
+</form>
 <br>
 <div class="content">
     <div>
-        <input type="checkbox" id="question1" name="q" class="questions">
-        <div class="plus">+</div>
-        <label for="question1" class="question">
-            Comments
-        </label>
-        <div class="answers">
+        {% if comments == [] %}
+            <p>There are no comments yet.</p>
+        {% else %}
+            <input type="checkbox" id="question1" name="q" class="questions">
+            <div class="plus">+</div>
+            <label for="question1" class="question">
+                Comments
+            </label>
+            <div class="container">
+            <table>
+
             {% for item in comments %}
-                {{ item['message'] }}
+                <td>
+                    <div class="answers">
+                        {{ item['message'] }}
+                    </div>
+                </td>
+                <td>
+                    <form action="/comment/{{ item['id'] }}/edit">
+                        <button type="submit">Edit Comment</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/comment/{{ item['id'] }}/delete">
+                        <button type="submit">Delete Comment</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/comment/{{ item['id'] }}/add">
+                        <button type="submit">Add Comment</button>
+                    </form>
+                </td>
             {% endfor %}
+        {% endif %}
+        </table>
         </div>
     </div>
 
