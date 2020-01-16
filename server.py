@@ -176,7 +176,7 @@ def add_new_comment_to_question(question_id):
 
 
 # DONE
-@app.route('/comment/<comment_id>/new-comment', methods=['GET', 'POST'])
+@app.route('/answer/<comment_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_answer(comment_id):
     submission_time = datetime.now()
     new_comment = {'answer_id': comment_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
