@@ -14,21 +14,68 @@
 <div class='centerpleaseMessage'>
     {{ question[0]['message'] }}
 </div>
+<h2>Tags</h2>
+{% if tags != [] %}
+    {% for tag in tags %}
+        {{ tag['name'] }} <a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">X</a><br>
+    {% endfor %}
+{% else %}
+    <h4>No tags yet.</h4>
+{% endif %}
+<form action="/question/{{ question_id }}/new-tag" method="post">
+
+    <label for="existing_tag">Or select from existing tags:</label><br>
+    <select id="existing_tag" name="existing_tag">
+        <option value="add_new_tag">-</option>
+        {% for tag in tags %}
+            <option value="{{ tag['name'] }}">{{ tag['name'] }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label for="new_tag">Describe new tag:</label><br>
+    <input type="text" id="new_tag" name="new_tag"><br>
+    <button type="sumbit">Post Tag</button>
+
+</form>
 <br>
 <div class="content">
     <div>
-        <input type="checkbox" id="question1" name="q" class="questions">
-        <div class="plus">+</div>
-        <label for="question1" class="question">
-            Comments
-        </label>
-        <div class="answers">
-            {% for item in comments %}
-                {{ item['message'] }}
+        {% if comments == [] %}
+            <p>There are no comments yet.</p>
+        {% else %}
+            <input type="checkbox" id="question1" name="q" class="questions">
+            <div class="plus">+</div>
+            <label for="question1" class="question">
+                Comments
+            </label>
+            <div class="container">
+            <table>
+            {% for comment in comments %}
+                <td>
+                    <div class="body">
+                        <h5>{{ comment['message'] }}</h5>
+                    </div>
+                </td>
+                <td>
+                    <form action="/comment/{{ comment['id'] }}/edit">
+                        <button type="submit">Edit Comment</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/comment/{{ comment['id'] }}/delete">
+                        <button type="submit">Delete Comment</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/comment/{{ comment['id'] }}/add">
+                        <button type="submit">Add Comment</button>
+                    </form>
+                </td>
             {% endfor %}
+        {% endif %}
+        </table>
         </div>
     </div>
-
 </div>
 <br>
 <br>
@@ -62,6 +109,11 @@
                         </td>
                         <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
                         <td>
+                            <form action="/answer/{{ item['id'] }}/add">
+                                <button type="submit">Add Answer</button>
+                            </form>
+                        </td>
+                        <td>
                             <form action="/answer/{{ item['id'] }}/delete">
                                 <button type="submit">Delete Answer</button>
                             </form>
@@ -77,20 +129,51 @@
         </div>
         <input type="radio" name="tabs" id={{ item['message'] }}>
         <label for={{ item['message'] }}>Comments</label>
-        <div class="tab">
-            {% for comment in answer_comments %}
-                {% if comment['answer_id'] == item['id'] %}
-                    <p>{{ comment['message'] }}</p>
-                    {% if comment['edited_count'] == None %}
-                        <p>Edited 0 time(s)</p>
-                    {% else %}
-                        <p>{{ comment['edited_count'] }}</p>
-                    {% endif %}
-                    <p>Publish Date: {{ comment['submission_time'] }}</p>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
+        {% for comment in answer_comments %}
+            <div class="tab">
+                <p>{{ comment['message'] }}</p>
+                <br>
+                <div class="container">
+                    <table>
+                        <tr>
+                            <th>Submission Time</th>
+                            <th>Times edited</th>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                {{ comment['submission_time'] }}
+                            </td>
+                            {% if comment['edited_count'] == None %}
+                                <td>
+                                    There are 0 edits.
+                                </td>
+                            {% else %}
+                                <td>
+                                    {{ comment['edited_count'] }}
+                                </td>
+                            {% endif %}
+                            <td>
+                                <form action="/comment/{{ comment['id'] }}/add">
+                                    <button type="submit">Add Comment</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/comment/{{ comment['id'] }}/edit">
+                                    <button type="submit">Edit Comment</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="/comment/{{ comment['id'] }}/delete">
+                                    <button type="submit">Delete Comment</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </div>
+        {% endfor %}
     <br>
 {% endfor %}
 </body>

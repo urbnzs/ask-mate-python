@@ -85,6 +85,11 @@
                             <button type="submit">Edit Question</button>
                         </form>
                     </td>
+                    <td>
+                        <form action="/question/{{ line['id'] }}/edit">
+                            <button type="submit">Delete Question</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
 
