@@ -176,17 +176,17 @@ def add_new_comment_to_question(question_id):
 
 
 # DONE
-@app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
-def add_new_comment_to_answer(answer_id):
+@app.route('/comment/<comment_id>/new-comment', methods=['GET', 'POST'])
+def add_new_comment_to_answer(comment_id):
     submission_time = datetime.now()
-    new_comment = {'answer_id': answer_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
-    answer = connection.answers_by_id(answer_id, False)
+    new_comment = {'answer_id': comment_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
+    answer = connection.answers_by_id(comment_id, False)
     question_id = answer[0]['question_id']
     if request.method == 'POST':
         new_comment['message'] = request.form['message']
         data_manager.add_comment_to_answer(new_comment)
         return redirect('/question/' + str(question_id))
-    return render_template('add_comment_to_answer.html', id=answer_id)
+    return render_template('add_comment_to_answer.html', id=comment_id)
 
 
 # DONE
