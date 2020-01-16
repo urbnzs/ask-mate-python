@@ -220,9 +220,13 @@ def delete_comment(comment_id):
     print(question_id)
     return redirect('/question/' + str(question_id))
 
-#DONE
+#TODO: delete tags with question
 @app.route('/question/<id>/delete')
 def question_delete(id):
+    tag_ids = data_manager.get_tags_by_question(id)
+    if tag_ids != []:
+        for tag in tag_ids:
+            data_manager.delete_tags_by_question(id, tag['tag_id'])
     data_manager.delete_comment_by_question_id(id)
     answers = connection.answers_by_id(id)
     for answer in answers:
