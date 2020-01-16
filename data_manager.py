@@ -44,7 +44,7 @@ def get_question_by_id(cursor,id):
 
 @database_common.connection_handler
 def get_answer_by_id(cursor, id):
-    print(id)
+
     cursor.execute("""
                     SELECT * FROM answer
                     WHERE id = %(id)s
@@ -52,7 +52,6 @@ def get_answer_by_id(cursor, id):
                     """, {'id': id})
 
     answer = cursor.fetchall()
-    print(answer)
     return answer
 
 
@@ -69,7 +68,6 @@ def list_questions(cursor):
 
 @database_common.connection_handler
 def edit_question(cursor, id, question):
-    print(question)
     title = question[0]['title']
     message = question[0]['message']
     image = question[0]['image']
@@ -111,9 +109,9 @@ def get_last_five(cursor):
 def search(cursor, word):
     cursor.execute(""" 
                     SELECT * FROM question
-                    WHERE title  LIKE '%{}%'
-                    OR message LIKE '%{}%';
-                        """.format(word,word))
+                    WHERE title  LIKE '{}'
+                    OR message LIKE '{}';
+                        """.format(word, word))
 
     questions = cursor.fetchall()
     return questions

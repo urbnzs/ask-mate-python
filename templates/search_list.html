@@ -55,10 +55,15 @@
                     <td>{{ line['submission_time'] }}</td>
 
                     <td>{{ line['view_number'] }}</td>
-
-                    <td><a href="/question/{{ line['id'] }}"> {{ line['title'] }} </a></td>
-
-
+                    <td>
+                        {% for item in line['title'] %}
+                            {% if item == word %}
+                                <mark><a href="/question/{{ line['id'] }}"> {{ item }} </a></mark>
+                            {% else %}
+                                <a href="/question/{{ line['id'] }}"> {{ item }} </a>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                     <td>
                         {% for item in line['message'] %}
                             {% if item == word %}

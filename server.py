@@ -42,6 +42,7 @@ def search():
 
     for item in questions:
         item['message'] = item['message'].split(" ")
+        item['title'] = item['title'].split(" ")
 
 
     for i in questions:
@@ -51,6 +52,9 @@ def search():
 
     for item in answers:
         item['message'] = item['message'].split(" ")
+
+    print("Questionok: " + str(questions))
+    print("Answerek: " + str(answers))
 
     return render_template('search_list.html', list_of_questions = return_questions, word = word, list_of_answers = answers)
 
