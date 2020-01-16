@@ -42,8 +42,39 @@
 
             <p>{{ item['message'] }}</p>
             <br>
+            <div class="container">
+                <table>
+                    <tr>
+                        <th style="color: #4DC3FA">Submission Time</th>
+                        <th style="color: #4DC3FA">Vote Number</th>
+                        <th style="color: #4DC3FA">Image</th>
+                    </tr>
+                    <tr>
+                        <td>{{ item['submission_time'] }}</td>
+                        <td>
+                            <form action="/answer/{{ item['id'] }}/vote-up">
+                                <button type="submit">∧</button>
+                            </form>
+                            {{ item['vote_number'] }}
+                            <form action="/answer/{{ item['id'] }}/vote-down">
+                                <button type="submit">v</button>
+                            </form>
+                        </td>
+                        <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
+                        <td>
+                            <form action="/answer/{{ item['id'] }}/delete">
+                                <button type="submit">Delete Answer</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/answer/{{ item['id'] }}/edit">
+                                <button type="submit">Edit Answer</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-
         <input type="radio" name="tabs" id={{ item['message'] }}>
         <label for={{ item['message'] }}>Comments</label>
         <div class="tab">
