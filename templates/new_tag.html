@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Tag</title>
+</head>
+<body>
+    <h1>Add a New Tag to Question {{ question_id }}</h1><br>
+
+    <form action="/question/{{ question_id }}/new-tag" method="post">
+
+        <label for="existing_tag">Or select from existing tags:</label><br>
+        <select id="existing_tag" name="existing_tag">
+            <option value="add_new_tag">-</option>
+            {% for tag in tags %}
+                <option value="{{ tag['name'] }}">{{ tag['name'] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="new_tag">Describe new tag:</label><br>
+            <input type="text" id="new_tag" name="new_tag"><br>
+        <button type="sumbit">Post Tag</button>
+
+    </form>
+
+    <form action="/question/{{ question_id }}">
+        <button type="submit">Cancel</button>
+    </form>
+
+</body>
+</html>

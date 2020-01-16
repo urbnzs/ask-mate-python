@@ -61,15 +61,30 @@
 </form>
     <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); font-weight: bold; width: 70%; margin-left: 15%; margin-right: 15%; font-size: 24px" >{{ question[0]['title'] }}</div></p>
     <p><div style="text-align: center; color: darkslateblue; background-color: rgba(240,248,255, 0.5); width: 70%; margin-left: 15%; margin-right: 15%; font-size: 20px" >{{ question[0]['message'] }}</div></p>
+    <h2>Tags</h2>
+    {% if tags != [] %}
+        {% for tag in tags %}
+            {{ tag['name'] }} <a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">X</a><br>
+        {% endfor %}
+    {% else %}
+        <h4>No tags yet.</h4>
+    {% endif %}
+    <form action="/question/{{ question_id }}/new-tag">
+        <button type="submit">Add New Tag</button>
+    </form>
     <div class="container">
 	    <div class="table-wrap">
             <h2>Question Comments</h2>
     <table class="table">
-        <tr>
-            <th><h3>Message</h3></th>
-            <th><h3>Submission Time</h3></th>
-            <th><h3>Edited Count</h3></th>
-        </tr>
+        {% if comments != [] %}
+            <tr>
+                <th><h3>Message</h3></th>
+                <th><h3>Submission Time</h3></th>
+                <th><h3>Edited Count</h3></th>
+            </tr>
+        {% else %}
+            <h4>No comments yet.</h4><br>
+        {% endif %}
         {% for comment in comments %}
 
             <tr>
@@ -89,8 +104,9 @@
         <button type="submit">Add New Comment</button>
     </form>
     <h2>Answers</h2>
-
-
+            {% if answers == [] %}
+                <h4>No answers yet.</h4>
+            {% endif %}
             {% for item in answers %}
                <table class="table">
                     <tr>
