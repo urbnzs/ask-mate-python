@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Results</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='letters.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_styl.css') }}">
     <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
 </head>
 <body style="background-image: url(/static/background.jpg);">
@@ -83,62 +83,63 @@
                     </td>
                 </tr>
             {% endfor %}
-        <div class="table-wrap">
-        <table class="table">
-            <form>
-                <tr>
-                    <th>
+            <div class="table-wrap">
+                <table class="table">
+                    <form>
+                        <tr>
+                            <th>
 
-                        <h3>ID</h3>
+                                <h3>ID</h3>
 
-                    </th>
-                    <th>
+                            </th>
+                            <th>
 
-                        <h3>Submission Time</h3>
+                                <h3>Submission Time</h3>
 
-                    </th>
-                    <th>
+                            </th>
+                            <th>
 
-                        <h3>Vote Number</h3>
+                                <h3>Vote Number</h3>
 
-                    </th>
-                    <th>
+                            </th>
+                            <th>
 
-                        <h3>Message</h3>
+                                <h3>Message</h3>
 
-                    </th>
+                            </th>
 
-                    <th>
-                        <h3>Image</h3>
-                    </th>
-                </tr>
-                <h2>Answers</h2>
-            </form>
-            {% for line in list_of_answers %}
-                <tr>
-                    <td>{{ line['id'] }}</td>
+                            <th>
+                                <h3>Image</h3>
+                            </th>
+                        </tr>
+                        <h2>Answers</h2>
+                    </form>
+                    {% for line in list_of_answers %}
+                        <tr>
+                            <td>{{ line['id'] }}</td>
 
-                    <td>{{ line['submission_time'] }}</td>
+                            <td>{{ line['submission_time'] }}</td>
 
-                    <td>{{ line['vote_number'] }}</td>
+                            <td>{{ line['vote_number'] }}</td>
 
-                    <td>
-                        {% for item in line['message'] %}
-                            {% if item == word %}
-                                <mark>{{ item }}</mark>
-                            {% else %}
-                                {{ item }}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td><a href="{{ line['image'] }}"><img src="{{ line['image'] }} " height="150" width="150"></a></td>
+                            <td>
+                                {% for item in line['message'] %}
+                                    {% if item == word %}
+                                        <mark>{{ item }}</mark>
+                                    {% else %}
+                                        {{ item }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td><a href="{{ line['image'] }}"><img src="{{ line['image'] }} " height="150" width="150"></a>
+                            </td>
 
-                </tr>
-            {% endfor %}
-        </table>
-        <form action="/add-question">
-            <button type="submit">Add New Question</button>
-        </form>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <form action="/add-question">
+                    <button type="submit">Add New Question</button>
+                </form>
 </body>
 </html>
 
