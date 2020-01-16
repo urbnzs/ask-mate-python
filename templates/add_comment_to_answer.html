@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Comment</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
+    <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
 </head>
 <body>
+<div class="container">
     <h1>Add a New Comment</h1><br>
 
     <form action="/answer/{{ id }}/new-comment" method="post" enctype="multipart/form-data">
 
-        <label for="message">Message:</label><br>
-        <textarea type="text" id="message" name="message" rows="8" cols="80" required></textarea><br>
-        <button type="sumbit">Post Comment</button>
+        <label for="message"><h5>Message</h5></label><br>
+        <textarea type="text" id="message" name="message" rows="8" cols="80" required></textarea><br><br>
+        <button type="sumbit">Post Comment</button><br><br>
 
     </form>
 
     <form action="/question/{{ id }}">
         <button type="submit">Cancel</button>
     </form>
-
+</div>
 </body>
 </html>

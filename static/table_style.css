@@ -10,7 +10,7 @@ body {
 }
 
 h1 {
-    font-size: 3em;
+    font-size: 2em;
     font-weight: 300;
     line-height: 1em;
     text-align: center;
@@ -24,6 +24,32 @@ h2 {
     display: block;
     line-height: 1em;
     padding-bottom: 2em;
+    color: #FB667A;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 300;
+    text-align: center;
+    display: block;
+    line-height: 1em;
+    font-weight: bold;
+    color: #A7A1AE;
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: 300;
+    text-align: center;
+    display: block;
+    line-height: 1em;
+    color: #A7A1AE;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: 300;
+    text-align: center;
     color: #FB667A;
 }
 
@@ -162,4 +188,26 @@ a:hover {
 /* selected link */
 a:active {
   color: #0E1119;
+}
+
+textarea {
+    background-color: #A7A1AE;
+	border:2px solid #4DC3FA;
+	border-radius:10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: #1F2739;
+}
+
+img {
+  border-radius: 8px;
+}
+
+input {
+    background-color: #A7A1AE;
+	border:2px solid #4DC3FA;
+	border-radius:10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: #1F2739;
 }
