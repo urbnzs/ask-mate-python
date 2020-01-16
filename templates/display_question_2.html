@@ -98,17 +98,17 @@
                         </td>
                         <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
                         <td>
-                            <form action="/answer/{{ item['id'] }}/add">
+                            <form action="/question/{{ item['id'] }}/new-answer">
                                 <button type="submit">Add Answer</button>
                             </form>
                         </td>
                         <td>
-                            <form action="/answer/{{ item['id'] }}/delete">
+                            <form action="/question/{{ item['id'] }}/delete">
                                 <button type="submit">Delete Answer</button>
                             </form>
                         </td>
                         <td>
-                            <form action="/answer/{{ item['id'] }}/edit">
+                            <form action="/question/{{ item['id'] }}/edit">
                                 <button type="submit">Edit Answer</button>
                             </form>
                         </td>
@@ -143,7 +143,7 @@
                                 </td>
                             {% endif %}
                             <td>
-                                <form action="/comment/{{ comment['id'] }}/add">
+                                <form action="/comment/{{ comment['id'] }}/new-comment">
                                     <button type="submit">Add Comment</button>
                                 </form>
                             </td>
