@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Question</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='display_question.css') }}">
+</head>
+<body>
+<div class='centerplease'>
+    {{ question[0]['title'] }}
+</div>
+<br>
+<br>
+<div class='centerpleaseMessage'>
+    {{ question[0]['message'] }}
+</div>
+<br>
+<div class="content">
+    <div>
+        <input type="checkbox" id="question1" name="q" class="questions">
+        <div class="plus">+</div>
+        <label for="question1" class="question">
+            Comments
+        </label>
+        <div class="answers">
+            {% for item in comments %}
+                {{ item['message'] }}
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+<br>
+<br>
+<br>
+
+{% for item in answers %}
+    <div class="tabs">
+        <input type="radio" name="tabs" id={{ item['id'] }} checked="checked">
+        <label for={{ item['id'] }}>Answer</label>
+        <div class="tab">
+
+            <p>{{ item['message'] }}</p>
+            <br>
+        </div>
+
+        <input type="radio" name="tabs" id={{ item['message'] }}>
+        <label for={{ item['message'] }}>Comments</label>
+        <div class="tab">
+            {% for comment in answer_comments %}
+                {% if comment['answer_id'] == item['id'] %}
+                    <p>{{ comment['message'] }}</p>
+                    {% if comment['edited_count'] == None %}
+                        <p>Edited 0 time(s)</p>
+                    {% else %}
+                        <p>{{ comment['edited_count'] }}</p>
+                    {% endif %}
+                    <p>Publish Date: {{ comment['submission_time'] }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+{% endfor %}
+</body>
+</html>
