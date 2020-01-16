@@ -77,7 +77,7 @@ def display_question(id):
     comments = data_manager.get_comment_by_question_id(id)
     connection.view_number(id)
     tags = data_manager.get_tag_name_by_question_id(id)
-    return render_template('display_question.html', question=question, answers=answers, question_id=question_id,
+    return render_template('display_question_2.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
                            tags=tags)
