@@ -50,25 +50,24 @@
             </label>
             <div class="container">
             <table>
-
-            {% for item in comments %}
+            {% for comment in comments %}
                 <td>
-                    <div class="answers">
-                        {{ item['message'] }}
+                    <div class="body">
+                        <h5>{{ comment['message'] }}</h5>
                     </div>
                 </td>
                 <td>
-                    <form action="/comment/{{ item['id'] }}/edit">
+                    <form action="/comment/{{ comment['id'] }}/edit">
                         <button type="submit">Edit Comment</button>
                     </form>
                 </td>
                 <td>
-                    <form action="/comment/{{ item['id'] }}/delete">
+                    <form action="/comment/{{ comment['id'] }}/delete">
                         <button type="submit">Delete Comment</button>
                     </form>
                 </td>
                 <td>
-                    <form action="/comment/{{ item['id'] }}/add">
+                    <form action="/comment/{{ comment['id'] }}/add">
                         <button type="submit">Add Comment</button>
                     </form>
                 </td>
@@ -77,7 +76,6 @@
         </table>
         </div>
     </div>
-
 </div>
 <br>
 <br>
@@ -110,6 +108,11 @@
                             </form>
                         </td>
                         <td><a href="{{ item[5] }}"><img src="{{ item['image'] }} " width="150" height="150"></a></td>
+                        <td>
+                            <form action="/answer/{{ item['id'] }}/add">
+                                <button type="submit">Add Answer</button>
+                            </form>
+                        </td>
                         <td>
                             <form action="/answer/{{ item['id'] }}/delete">
                                 <button type="submit">Delete Answer</button>
@@ -150,6 +153,11 @@
                                     {{ comment['edited_count'] }}
                                 </td>
                             {% endif %}
+                            <td>
+                                <form action="/comment/{{ comment['id'] }}/add">
+                                    <button type="submit">Add Comment</button>
+                                </form>
+                            </td>
                             <td>
                                 <form action="/comment/{{ comment['id'] }}/edit">
                                     <button type="submit">Edit Comment</button>
