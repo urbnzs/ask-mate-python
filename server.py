@@ -373,6 +373,11 @@ def list_all_tags():
     tags = data_manager.get_all_tags()
     return render_template('all_tags.html', tags=tags)
 
+@app.route('/all-users')
+def list_all_users():
+    users = data_manager.get_all_users()
+    return render_template('all_users.html', users=users)
+
 if __name__ == "__main__":
     app.run(
         debug=True,

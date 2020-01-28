@@ -362,3 +362,12 @@ def get_all_tags(cursor):
                     """)
     tags = cursor.fetchall()
     return tags
+
+@database_common.connection_handler
+def get_all_users(cursor):
+    cursor.execute("""
+                    SELECT registration_time, username, reputation 
+                    FROM users;
+                    """)
+    users = cursor.fetchall()
+    return users
