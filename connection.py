@@ -121,3 +121,19 @@ def hash_password(plain_text_password):
 
     hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
     return hashed_bytes.decode('utf-8')
+
+@database_common.connection_handler
+def accept_answer(cursor, answer_id):
+    cursor.execute("""
+                    UPDATE answer
+                    SET accepted = True
+                    WHERE id = %(answer_id)s;
+                    """, {'answer_id': answer_id})
+    cursor.execute("""
+                    SELECT question_id FROM answer
+                    WHERE id = %(answer_id)s;
+                    """, {'answer_id': answer_id})
+    question_id = cursor.fetchall()
+    return question_id[0]['question_id']
+
+
