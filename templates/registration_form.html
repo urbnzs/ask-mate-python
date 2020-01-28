@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registartion</title>
+</head>
+<body>
+<form method="post" action="/registration">
+    <input type="text" name="username" minlength="5">
+    <input type="password" name="password" minlength="5">
+    <button type="submit">Register</button>
+    <script>
+    if({{alert}} == 1){
+        alert("Username already exists!");
+    }
+</script>
+</form>
+</body>
+</html>

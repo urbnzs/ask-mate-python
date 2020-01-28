@@ -10,7 +10,7 @@ def get_connection_string():
     user_name = 'dobitamas'
     password = 'psql'
     host = 'localhost'
-    database_name = 'ask-mate'
+    database_name = 'AskMate'
 
     env_variables_defined = user_name and password and host and database_name
 

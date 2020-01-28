@@ -15,6 +15,28 @@ def add_new_question(cursor, question):
     id = cursor.fetchall()
     return id[0]['id']
 
+@database_common.connection_handler
+def register_user(cursor, username, password, reputation, submission_time):
+    cursor.execute("""
+                    INSERT INTO users (registration_time, username, password, reputation)
+                    VALUES (%(submission_time)s, %(username)s, %(password)s, %(reputation)s)
+                    """, {"submission_time" : submission_time ,"username" : username, "password" : password, "reputation" : reputation})
+
+
+@database_common.connection_handler
+def user_checker(cursor, username):
+    #Returns FALSE if username exists
+    cursor.execute("""
+                    Select * FROM  users
+                    WHERE username = %(username)s;
+                    """, {"username" : username})
+
+    number = cursor.fetchall()
+    if number:
+        return False
+    else:
+        return True
+
 
 @database_common.connection_handler
 def add_new_answer(cursor, answer):

@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
-from werkzeug.utils import secure_filename
+from flask import Flask, render_template, request, redirect, send_from_directory, session, url_for, flash
+from werkzeug.utils import escape
+
 import connection
 import data_manager
 from datetime import datetime
@@ -12,6 +13,37 @@ DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'me
 UPLOAD_folder = './static/'
 ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_folder
+
+app.secret_key = '_5#y2L"F4Q8zuin98xec]/'
+
+
+@app.route('/index')
+def index():
+    if 'username' in session:
+        return 'Logged in as %s' % escape(session['username'])
+    return 'You are not logged in'
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        session['password'] = request.form['password']
+        return redirect(url_for('index'))
+    return '''
+        <form method="post">
+            <p><input type=text name=username>
+            <p><input type=password name=password>
+            <p><input type=submit value=Login>
+        </form>
+    '''
+
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 
 def allowed_file(filename):
@@ -26,7 +58,22 @@ def list_latest_five():
         return redirect('/search?q={}'.format(word))
 
     questions = data_manager.get_last_five()
-    return render_template('list_latest_five.html', list_of_data = questions)
+    return render_template('list_latest_five.html', list_of_data=questions)
+
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        username = request.form['username']
+        if data_manager.user_checker(username):
+            password = connection.hash_password(request.form['password'])
+            submission_time = datetime.now()
+            reputation = 0
+            data_manager.register_user(username, password, reputation, submission_time)
+            return redirect('/')
+        else:
+            return render_template('registration_form.html', alert = 1)
+    return render_template('registration_form.html', alert = 0)
 
 
 @app.route('/search')

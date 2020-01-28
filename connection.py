@@ -1,3 +1,5 @@
+import bcrypt
+
 import data_manager
 import database_common
 
@@ -114,3 +116,8 @@ def view_number(cursor, id):
                      
                     """, {'id' : id})
 
+
+def hash_password(plain_text_password):
+
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
