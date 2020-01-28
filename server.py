@@ -69,7 +69,8 @@ def registration():
             password = connection.hash_password(request.form['password'])
             submission_time = datetime.now()
             reputation = 0
-            data_manager.register_user(username, password, reputation, submission_time)
+            new_user_id = data_manager.register_user(username, password, reputation, submission_time)
+            session['user_id'] = new_user_id
             return redirect('/')
         else:
             return render_template('registration_form.html', alert = 1)
