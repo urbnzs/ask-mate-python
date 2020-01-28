@@ -347,3 +347,13 @@ def get_questions_for_multiple_answers(cursor, answer_ids):
         return questions
     else:
         return []
+
+@database_common.connection_handler
+def get_all_tags(cursor):
+    cursor.execute("""
+                    SELECT tag.name, COUNT(question_tag.question_id) AS count FROM tag
+                    LEFT JOIN question_tag ON question_tag.tag_id = tag.id
+                    GROUP BY tag.name;
+                    """)
+    tags = cursor.fetchall()
+    return tags

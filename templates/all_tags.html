@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Tags</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="table-wrap">
+        <h1>All Tags</h1><br>
+        <table class="table" align="center">
+            <tr>
+               <th>Tag Name</th>
+                <th>Marked Questions Count</th>
+            </tr>
+            {% for tag in tags %}
+                <tr>
+                    <td>{{ tag['name'] }}</td>
+                    <td>{{ tag['count'] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</body>
+</html>
