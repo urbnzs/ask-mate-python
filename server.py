@@ -320,6 +320,10 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+@app.route('/tags')
+def list_all_tags():
+    tags = data_manager.get_all_tags()
+    return render_template('all_tags.html', tags=tags)
 
 if __name__ == "__main__":
     app.run(
