@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Items</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
+</head>
+<body>
+<div class="container">
+    {% if alert_message == 1 %}
+        <h1>You don't have the permission to delete this item.</h1><br>
+    {% else %}
+        <h1>Please log in first.</h1>
+        <form action="/login">
+            <button type="submit">Go to login page</button>
+        </form>
+    {% endif %}
+
+    {% if question %}
+        <form action="/list">
+            <button type="submit">Go Back to Main Page</button>
+        </form>
+    {% else %}
+        <form action="/question/{{ question_id }}">
+            <button type="submit">Go Back to Question Page</button>
+        </form>
+    {% endif %}
+</div>
+</body>
+</html>
