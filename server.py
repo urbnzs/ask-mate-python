@@ -351,6 +351,7 @@ def list_ordered(order, direct):
 @app.route('/question/<question_id>/vote-up')
 def vote_up_question(question_id):
     connection.voting_question(question_id, True)
+    connection.gain_reputation_by_question(question_id)
     return redirect('/list')
 
 
@@ -358,6 +359,7 @@ def vote_up_question(question_id):
 @app.route('/question/<question_id>/vote-down')
 def vote_down_question(question_id):
     connection.voting_question(question_id, False)
+    connection.lose_reputation_by_question(question_id)
     return redirect('/list')
 
 
@@ -367,6 +369,7 @@ def vote_up_answer(answer_id):
     connection.voting_answers(answer_id, True)
     voted_answer = connection.answers_by_id(answer_id, False)
     question_id = voted_answer[0]['question_id']
+    connection.gain_reputation_by_answer(answer_id)
     return redirect('/question/' + str(question_id))
 
 
@@ -376,6 +379,7 @@ def vote_down_answer(answer_id):
     connection.voting_answers(answer_id, False)
     voted_answer = connection.answers_by_id(answer_id, False)
     question_id = voted_answer[0]['question_id']
+    connection.lose_reputation_by_answer(answer_id)
     return redirect('/question/' + str(question_id))
 
 
@@ -400,6 +404,7 @@ def list_all_users():
 @app.route('/<answer_id>/accept-answer')
 def accepted_answer(answer_id):
     question_id = connection.accept_answer(answer_id)
+    connection.gain_reputation_by_accepted(answer_id)
     return redirect('/question/' + str(question_id))
 
 
