@@ -378,6 +378,12 @@ def list_all_users():
     users = data_manager.get_all_users()
     return render_template('all_users.html', users=users)
 
+@app.route('/<answer_id>/accept-answer')
+def accepted_answer(answer_id):
+    question_id = connection.accept_answer(answer_id)
+    return redirect('/question/' + str(question_id))
+
+
 if __name__ == "__main__":
     app.run(
         debug=True,

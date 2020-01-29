@@ -124,6 +124,15 @@
                                 <button type="submit">Edit Answer</button>
                             </form>
                         </td>
+                        <td>
+                            {% if not item['accepted'] %}
+                                <form action="/{{ item['id'] }}/accept-answer">
+                                    <button type="submit">Accept Answer</button>
+                                </form>
+                            {% else %}
+                                <button type="button" disabled>Accepted</button>
+                            {% endif %}
+                        </td>
                     </tr>
                 </table>
             </div>
