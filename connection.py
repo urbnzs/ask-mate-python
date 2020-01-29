@@ -152,3 +152,79 @@ def accept_answer(cursor, answer_id):
     return question_id[0]['question_id']
 
 
+@database_common.connection_handler
+def gain_reputation_by_question(cursor, question_id):
+    cursor.execute("""
+                    SELECT users_id FROM question
+                    WHERE id = %(question_id)s;
+                    """, {'question_id': question_id})
+    user_ = cursor.fetchall()
+    if user_:
+        user_id = user_[0]['users_id']
+        cursor.execute("""
+                        UPDATE users 
+                        SET reputation = reputation + 5
+                        WHERE id = %(user_id)s;
+                        """, {'user_id': user_id})
+
+
+@database_common.connection_handler
+def gain_reputation_by_answer(cursor, answer_id):
+    cursor.execute("""
+                    SELECT users_id FROM answer
+                    WHERE id = %(answer_id)s;
+                    """, {'answer_id': answer_id})
+    user_ = cursor.fetchall()
+    if user_:
+        user_id = user_[0]['users_id']
+        cursor.execute("""
+                        UPDATE users 
+                        SET reputation = reputation + 10
+                        WHERE id = %(user_id)s;
+                        """, {'user_id': user_id})
+
+
+@database_common.connection_handler
+def gain_reputation_by_accepted(cursor, answer_id):
+    cursor.execute("""
+                    SELECT users_id FROM answer
+                    WHERE id = %(answer_id)s;
+                    """, {'answer_id': answer_id})
+    user_ = cursor.fetchall()
+    if user_:
+        user_id = user_[0]['users_id']
+        cursor.execute("""
+                        UPDATE users 
+                        SET reputation = reputation + 15
+                        WHERE id = %(user_id)s;
+                        """, {'user_id': user_id})
+
+@database_common.connection_handler
+def lose_reputation_by_question(cursor, question_id):
+    cursor.execute("""
+                    SELECT users_id FROM question
+                    WHERE id = %(question_id)s;
+                    """, {'question_id': question_id})
+    user_ = cursor.fetchall()
+    if user_:
+        user_id = user_[0]['users_id']
+        cursor.execute("""
+                        UPDATE users 
+                        SET reputation = reputation - 2 
+                        WHERE id = %(user_id)s;
+                        """, {'user_id': user_id})
+
+@database_common.connection_handler
+def lose_reputation_by_answer(cursor, answer_id):
+    cursor.execute("""
+                    SELECT users_id FROM answer
+                    WHERE id = %(answer_id)s;
+                    """, {'answer_id': answer_id})
+    user_ = cursor.fetchall()
+    if user_:
+        user_id = user_[0]['users_id']
+        cursor.execute("""
+                        UPDATE users 
+                        SET reputation = reputation - 2 
+                        WHERE id = %(user_id)s;
+                        """, {'user_id': user_id})
