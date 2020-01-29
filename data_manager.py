@@ -58,11 +58,11 @@ def password_getter(cursor, username):
 @database_common.connection_handler
 def add_new_answer(cursor, answer):
     cursor.execute("""
-                        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s);
+                        INSERT INTO answer (submission_time, vote_number, question_id, message, image,users_id)
+                        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s, %(users_id)s);
                          """, {'submission_time': answer['submission_time'], 'vote_number': answer['vote_number'],
                                'question_id': answer['question_id'], 'message': answer['message'],
-                               'image': answer['image']})
+                               'image': answer['image'], 'users_id':answer['users_id']})
     cursor.execute("""
                         SELECT id FROM answer 
                         WHERE submission_time = %(submission_time)s;""",
@@ -172,10 +172,10 @@ def search_in_answers(cursor, word):
 @database_common.connection_handler
 def add_comment_to_question(cursor, comment):
     cursor.execute("""
-                          INSERT INTO comment (question_id, message, submission_time, edited_count)
-                          VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s);
+                          INSERT INTO comment (question_id, message, submission_time, edited_count, users_id)
+                          VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s, %(users_id)s);
                            """, {'question_id': comment['question_id'], 'message': comment['message'],
-                                 'submission_time': comment['submission_time'], 'edited_count': comment['edited_count']})
+                                 'submission_time': comment['submission_time'], 'edited_count': comment['edited_count'], 'users_id': comment['users_id']})
 
 
 @database_common.connection_handler
@@ -207,10 +207,10 @@ def delete_comment_by_question_id(cursor, question_id):
 @database_common.connection_handler
 def add_comment_to_answer(cursor, comment):
     cursor.execute("""
-                          INSERT INTO comment (answer_id, message, submission_time, edited_count)
-                          VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s);
+                          INSERT INTO comment (answer_id, message, submission_time, edited_count, users_id)
+                          VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s, %(users_id)s);
                            """, {'answer_id': comment['answer_id'], 'message': comment['message'],
-                                 'submission_time': comment['submission_time'], 'edited_count': comment['edited_count']})
+                                 'submission_time': comment['submission_time'], 'edited_count': comment['edited_count'], 'users_id': comment['users_id']})
 
 
 @database_common.connection_handler
