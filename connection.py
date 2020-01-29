@@ -69,27 +69,47 @@ def delete_answer(cursor, id,by_question = False):
 
 
 @database_common.connection_handler
-def can_i_edit_q(cursor,id):
+def can_i_edit_q(cursor, question_id):
     cursor.execute("""
                     SELECT users_id FROM question
                     WHERE id = %(q_id)s
-                    """, {'q_id' : id})
+                    """, {'q_id' : question_id})
 
     result = cursor.fetchall()
-
-    return result
+    if result:
+        user_id = result[0]['users_id']
+        return user_id
+    else:
+        return None
 
 
 @database_common.connection_handler
-def can_i_edit_a(cursor,id):
+def can_i_edit_a(cursor, answer_id):
     cursor.execute("""
                     SELECT users_id FROM answer
-                    WHERE id = %(q_id)s
-                    """, {'q_id' : id})
+                    WHERE id = %(a_id)s
+                    """, {'a_id': answer_id})
 
     result = cursor.fetchall()
+    if result:
+        user_id = result[0]['users_id']
+        return user_id
+    else:
+        return None
 
-    return result
+@database_common.connection_handler
+def can_i_delete_c(cursor, comment_id):
+    cursor.execute("""
+                    SELECT users_id FROM comment
+                    WHERE id = %(c_id)s
+                    """, {'c_id': comment_id})
+
+    result = cursor.fetchall()
+    if result:
+        user_id = result[0]['users_id']
+        return user_id
+    else:
+        return None
 
 
 @database_common.connection_handler

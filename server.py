@@ -170,7 +170,7 @@ def edit_question(id):
     question = data_manager.get_question_by_id(id)
     if session['logged_in'] == True:
         user_id = connection.get_id_by_username(session['username'])
-        if data_manager.check_edit(id, connection.can_i_edit_q(user_id)):
+        if data_manager.check_edit(user_id, connection.can_i_edit_q(id)):
             logged_in = 1
             if request.method == 'POST':
                 title = request.form['title']
@@ -189,32 +189,36 @@ def edit_question(id):
             logged_in = 0
     else:
         logged_in = 0
-    return render_template('edit_question.html', question=question, id=id, logged_in = logged_in)
+    print(logged_in)
+    return render_template('edit_question.html', question=question, id=id, logged_in=logged_in)
 
 
 # DONE
 @app.route('/answer/<id>/edit', methods=['GET', 'POST'])
 def edit_answer(id):
-    user_id = connection.get_id_by_username(session['username'])
-    if data_manager.check_edit(id, connection.can_i_edit_a(user_id)):
-        logged_in = 1
-        answer = data_manager.get_answer_by_id(id)
-        question_id = answer[0]['question_id']
-        if request.method == 'POST':
-            message = request.form['message']
-            file = request.files['file']
-            submission_time = datetime.now()
-            if file and allowed_file(file.filename):
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-                answer[0]['image'] = "/static/{}".format(file.filename)
+    answer = data_manager.get_answer_by_id(id)
+    if session['logged_in'] == True:
+        user_id = connection.get_id_by_username(session['username'])
+        if data_manager.check_edit(user_id, connection.can_i_edit_a(id)):
+            logged_in = 1
+            question_id = answer[0]['question_id']
+            if request.method == 'POST':
+                message = request.form['message']
+                file = request.files['file']
+                submission_time = datetime.now()
+                if file and allowed_file(file.filename):
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                    answer[0]['image'] = "/static/{}".format(file.filename)
 
-            answer[0]['message'] = message
+                answer[0]['message'] = message
 
-            data_manager.edit_answer(id, answer)
-            return redirect('/question/' + str(question_id))
+                data_manager.edit_answer(id, answer)
+                return redirect('/question/' + str(question_id))
+        else:
+            logged_in = 0
     else:
         logged_in = 0
-    return render_template('edit_answer.html', question=answer, id=id, logged_in = logged_in)
+    return render_template('edit_answer.html', question=answer, id=id, logged_in=logged_in)
 
 
 # DONE
@@ -319,41 +323,61 @@ def edit_question_comment(comment_id):
 @app.route('/comment/<comment_id>/delete')
 def delete_comment(comment_id):
     comment = data_manager.get_comment_by_id(comment_id)
-    print(comment)
     if comment[0]['question_id'] != None:
         question_id = comment[0]['question_id']
     else:
         answer = data_manager.get_answer_by_id(comment[0]['answer_id'])
         question_id = answer[0]['question_id']
-    data_manager.delete_comments(comment_id)
-    print(question_id)
-    return redirect('/question/' + str(question_id))
+    if session['logged_in'] == True:
+        user_id = connection.get_id_by_username(session['username'])
+        if data_manager.check_edit(user_id, connection.can_i_delete_c(comment_id)):
+            data_manager.delete_comments(comment_id)
+            return redirect('/question/' + str(question_id))
+        else:
+            return render_template('delete_items.html', alert_message=1, question=False, question_id=question_id)
+
+    else:
+        return render_template('delete_items.html', alert_message=0, question=False, question_id=question_id)
 
 
 # DONE
 @app.route('/question/<id>/delete')
 def question_delete(id):
-    tag_ids = data_manager.get_tags_by_question(id)
-    if tag_ids != []:
-        for tag in tag_ids:
-            data_manager.delete_tags_by_question(id, tag['tag_id'])
-    data_manager.delete_comment_by_question_id(id)
-    answers = connection.answers_by_id(id)
-    for answer in answers:
-        data_manager.delete_comment_by_answer_id(answer['id'])
-    connection.delete_answer(id, True)
-    connection.delete_question(id)
-    return redirect('/list')
+    if session['logged_in'] == True:
+        user_id = connection.get_id_by_username(session['username'])
+        if data_manager.check_edit(user_id, connection.can_i_edit_q(id)):
+            tag_ids = data_manager.get_tags_by_question(id)
+            if tag_ids != []:
+                for tag in tag_ids:
+                    data_manager.delete_tags_by_question(id, tag['tag_id'])
+            data_manager.delete_comment_by_question_id(id)
+            answers = connection.answers_by_id(id)
+            for answer in answers:
+                data_manager.delete_comment_by_answer_id(answer['id'])
+            connection.delete_answer(id, True)
+            connection.delete_question(id)
+            return redirect('/list')
+        else:
+            return render_template('delete_items.html', alert_message=1, question=True, question_id=None)
+    else:
+        return render_template('delete_items.html', alert_message=0, question=True, question_id=None)
 
 
 # DONE
 @app.route('/answer/<id>/delete')
 def answer_delete(id):
     answer_to_delete = connection.answers_by_id(id, False)
-    data_manager.delete_comment_by_answer_id(id)
     question_id = answer_to_delete[0]['question_id']
-    connection.delete_answer(id)
-    return redirect('/question/' + str(question_id))
+    if session['logged_in'] == True:
+        user_id = connection.get_id_by_username(session['username'])
+        if data_manager.check_edit(user_id, connection.can_i_edit_a(id)):
+            data_manager.delete_comment_by_answer_id(id)
+            connection.delete_answer(id)
+            return redirect('/question/' + str(question_id))
+        else:
+            return render_template('delete_items.html', alert_message=1, question=False, question_id=question_id)
+    else:
+        return render_template('delete_items.html', alert_message=0, question=False, question_id=question_id)
 
 
 # DONE
