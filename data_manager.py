@@ -57,11 +57,12 @@ def password_getter(cursor, username):
 
 @database_common.connection_handler
 def add_new_answer(cursor, answer):
-    values = ', '.join("'" + str(x) + "'" for x in answer.values())
     cursor.execute("""
                         INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                        VALUES (%s);
-                         """ % (values))
+                        VALUES (%(submission_time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s);
+                         """, {'submission_time': answer['submission_time'], 'vote_number': answer['vote_number'],
+                               'question_id': answer['question_id'], 'message': answer['message'],
+                               'image': answer['image']})
     cursor.execute("""
                         SELECT id FROM answer 
                         WHERE submission_time = %(submission_time)s;""",
@@ -170,11 +171,11 @@ def search_in_answers(cursor, word):
 
 @database_common.connection_handler
 def add_comment_to_question(cursor, comment):
-    values = ', '.join("'" + str(x) + "'" for x in comment.values())
     cursor.execute("""
                           INSERT INTO comment (question_id, message, submission_time, edited_count)
-                          VALUES (%s);
-                           """ % (values))
+                          VALUES (%(question_id)s, %(message)s, %(submission_time)s, %(edited_count)s);
+                           """, {'question_id': comment['question_id'], 'message': comment['message'],
+                                 'submission_time': comment['submission_time'], 'edited_count': comment['edited_count']})
 
 
 @database_common.connection_handler
@@ -205,11 +206,11 @@ def delete_comment_by_question_id(cursor, question_id):
 
 @database_common.connection_handler
 def add_comment_to_answer(cursor, comment):
-    values = ', '.join("'" + str(x) + "'" for x in comment.values())
     cursor.execute("""
                           INSERT INTO comment (answer_id, message, submission_time, edited_count)
-                          VALUES (%s);
-                           """ % (values))
+                          VALUES (%(answer_id)s, %(message)s, %(submission_time)s, %(edited_count)s);
+                           """, {'answer_id': comment['answer_id'], 'message': comment['message'],
+                                 'submission_time': comment['submission_time'], 'edited_count': comment['edited_count']})
 
 
 @database_common.connection_handler
