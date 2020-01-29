@@ -168,89 +168,118 @@ def add_question():
 @app.route('/question/<id>/edit', methods=['GET', 'POST'])
 def edit_question(id):
     question = data_manager.get_question_by_id(id)
-    if request.method == 'POST':
-        title = request.form['title']
-        message = request.form['message']
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-            question['image'] = "/static/{}".format(file.filename)
+    if session['logged_in'] == True:
+        user_id = connection.get_id_by_username(session['username'])
+        if data_manager.check_edit(id, connection.can_i_edit_q(user_id)):
+            logged_in = 1
+            if request.method == 'POST':
+                title = request.form['title']
+                message = request.form['message']
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                    question['image'] = "/static/{}".format(file.filename)
 
-        question[0]['title'] = title
-        question[0]['message'] = message
+                question[0]['title'] = title
+                question[0]['message'] = message
 
-        data_manager.edit_question(id, question)
-        return redirect('/question/' + str(id))
-    return render_template('edit_question.html', question=question, id=id)
+                data_manager.edit_question(id, question)
+                return redirect('/question/' + str(id))
+        else:
+            logged_in = 0
+    else:
+        logged_in = 0
+    return render_template('edit_question.html', question=question, id=id, logged_in = logged_in)
 
 
 # DONE
 @app.route('/answer/<id>/edit', methods=['GET', 'POST'])
 def edit_answer(id):
-    answer = data_manager.get_answer_by_id(id)
-    question_id = answer[0]['question_id']
-    if request.method == 'POST':
-        message = request.form['message']
-        file = request.files['file']
-        submission_time = datetime.now()
-        if file and allowed_file(file.filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-            answer[0]['image'] = "/static/{}".format(file.filename)
+    user_id = connection.get_id_by_username(session['username'])
+    if data_manager.check_edit(id, connection.can_i_edit_a(user_id)):
+        logged_in = 1
+        answer = data_manager.get_answer_by_id(id)
+        question_id = answer[0]['question_id']
+        if request.method == 'POST':
+            message = request.form['message']
+            file = request.files['file']
+            submission_time = datetime.now()
+            if file and allowed_file(file.filename):
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                answer[0]['image'] = "/static/{}".format(file.filename)
 
-        answer[0]['message'] = message
+            answer[0]['message'] = message
 
-        data_manager.edit_answer(id, answer)
-        return redirect('/question/' + str(question_id))
-    return render_template('edit_answer.html', question=answer, id=id)
+            data_manager.edit_answer(id, answer)
+            return redirect('/question/' + str(question_id))
+    else:
+        logged_in = 0
+    return render_template('edit_answer.html', question=answer, id=id, logged_in = logged_in)
 
 
 # DONE
 @app.route('/question/<id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(id):
-    submission_time = datetime.now()
-    vote_num = 0
-    question_id = id
-    user_id = connection.get_id_by_username(session['username'])
-    question = data_manager.get_question_by_id(question_id)
-    new_answer = {'submission_time': submission_time, 'vote_number': vote_num, 'question_id': question_id,
-                  'message': None, 'image': None, 'users_id' : user_id}
-    if request.method == 'POST':
-        new_answer['message'] = request.form['message']
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-            new_answer['image'] = ('/static/' + file.filename)
-        id_ = data_manager.add_new_answer(new_answer)
-        return redirect('/question/' + str(question_id))
-    return render_template('add_answer.html', question=question, id=id)
+    if session['logged_in'] == True:
+        logged_in = 1
+        submission_time = datetime.now()
+        vote_num = 0
+        question_id = id
+        user_id = connection.get_id_by_username(session['username'])
+        question = data_manager.get_question_by_id(question_id)
+        new_answer = {'submission_time': submission_time, 'vote_number': vote_num, 'question_id': question_id,
+                      'message': None, 'image': None, 'users_id': user_id}
+        if request.method == 'POST':
+            new_answer['message'] = request.form['message']
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                new_answer['image'] = ('/static/' + file.filename)
+            id_ = data_manager.add_new_answer(new_answer)
+            return redirect('/question/' + str(question_id))
+    else:
+        logged_in = 0
+        question = [0,0,0,0,0,0]
+    return render_template('add_answer.html', question=question, id=id, logged_in=logged_in)
 
 
 # DONE
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_question(question_id):
-    submission_time = datetime.now()
-    user_id = connection.get_id_by_username(session['username'])
-    new_comment = {'question_id': question_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0, 'users_id' : user_id}
-    if request.method == 'POST':
-        new_comment['message'] = request.form['message']
-        data_manager.add_comment_to_question(new_comment)
-        return redirect('/question/' + str(question_id))
-    return render_template('add_comment.html', id=question_id)
+    if session['logged_in'] == True:
+        logged_in = 1
+        submission_time = datetime.now()
+        user_id = connection.get_id_by_username(session['username'])
+        new_comment = {'question_id': question_id, 'message': None, 'submission_time': submission_time,
+                       'edited_count': 0, 'users_id': user_id}
+        if request.method == 'POST':
+            new_comment['message'] = request.form['message']
+            data_manager.add_comment_to_question(new_comment)
+            return redirect('/question/' + str(question_id))
+    else:
+        logged_in = 0
+        id=0
+    return render_template('add_comment.html', id=question_id, logged_in=logged_in)
 
 
 # DONE
 @app.route('/answer/<comment_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_answer(comment_id):
-    submission_time = datetime.now()
-    user_id = connection.get_id_by_username(session['username'])
-    new_comment = {'answer_id': comment_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0, 'users_id' : user_id}
-    answer = connection.answers_by_id(comment_id, False)
-    question_id = answer[0]['question_id']
-    if request.method == 'POST':
-        new_comment['message'] = request.form['message']
-        data_manager.add_comment_to_answer(new_comment)
-        return redirect('/question/' + str(question_id))
-    return render_template('add_comment_to_answer.html', id=comment_id)
+    if session['logged_in'] == True:
+        logged_in = 1
+        submission_time = datetime.now()
+        user_id = connection.get_id_by_username(session['username'])
+        new_comment = {'answer_id': comment_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0,
+                       'users_id': user_id}
+        answer = connection.answers_by_id(comment_id, False)
+        question_id = answer[0]['question_id']
+        if request.method == 'POST':
+            new_comment['message'] = request.form['message']
+            data_manager.add_comment_to_answer(new_comment)
+    else:
+        logged_in = 0
+        id = 0
+    return render_template('add_comment_to_answer.html', id=comment_id, logged_in=logged_in)
 
 
 # DONE

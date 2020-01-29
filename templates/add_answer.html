@@ -11,6 +11,7 @@
     <h1>Add a New Answer</h1><br>
     <h3>{{ question[0]['title'] }}</h3>
     <h4>{{ question[0]['message'] }}</h4><br>
+    {% if logged_in == 1 %}
     <form action="/question/{{ id }}/new-answer" method="post" enctype="multipart/form-data">
 
         <label for="message_input"><h5>Message</h5></label>
@@ -23,7 +24,12 @@
 
         <button type="sumbit">Post Answer</button><br>
         <br>
-
+    {% else %}
+            <h2>Please login first</h2>
+            <form action="/login">
+                <button type="submit">Go to login page</button>
+            </form>
+    {% endif %}
     </form>
     <form action="/question/{{ id }}">
         <button type="submit">Cancel</button>

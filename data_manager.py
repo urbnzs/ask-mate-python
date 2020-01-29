@@ -385,3 +385,9 @@ def get_all_users(cursor):
     users = cursor.fetchall()
     return users
 
+
+def check_edit(to_edit_id, user_id):
+    if to_edit_id == user_id:
+        return True
+    else:
+        return False

@@ -23,18 +23,19 @@
 
             <button type="submit" enctype="multipart/form-data">Post Question</button>
             <br><br>
+        </form>
     {% else %}
-            <h2>Please login first</h2>
-            <form action="/login">
-                <button type="submit">Go to login page</button>
-            </form>
+        <h2>Please login first</h2>
+        <form action="/login">
+            <button type="submit">Go to login page</button>
+        </form>
     {% endif %}
 
 
 
-        <form action="/list">
-            <button type="submit">Cancel</button>
-        </form>
+    <form action="/list">
+        <button type="submit">Cancel</button>
+    </form>
 </div>
 </body>
 </html>
