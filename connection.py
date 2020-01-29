@@ -34,6 +34,16 @@ def answers_by_id(cursor, id, by_question=True):
     return answers
 
 
+@database_common.connection_handler
+def get_id_by_username(cursor, username):
+    cursor.execute("""
+                    SELECT id FROM users
+                    WHERE username = %(username)s;
+                    """, {"username" : username})
+
+    id = cursor.fetchall()
+    return id[0]['id']
+
 
 @database_common.connection_handler
 def delete_question(cursor,id):

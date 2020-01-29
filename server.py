@@ -142,21 +142,26 @@ def display_question(id):
 # DONE
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    submission_time = datetime.now()
-    view_num = 0
-    vote_num = 0
-    new_question = {'submission_time': submission_time, 'view_number': view_num, 'vote_number': vote_num,
-                    'title': None, 'message': None, 'image': None}
-    if request.method == 'POST':
-        new_question['title'] = request.form['title']
-        new_question['message'] = request.form['message']
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-            new_question['image'] = "/static/{}".format(file.filename)
-        id_ = data_manager.add_new_question(new_question)
-        return redirect('/question/' + str(id_))
-    return render_template('add_q.html')
+    if session['logged_in'] == True:
+        logged_in = 1
+        submission_time = datetime.now()
+        view_num = 0
+        vote_num = 0
+        user_id = connection.get_id_by_username(session['username'])
+        new_question = {'submission_time': submission_time, 'view_number': view_num, 'vote_number': vote_num,
+                        'title': None, 'message': None, 'image': None, 'users_id' : user_id}
+        if request.method == 'POST':
+            new_question['title'] = request.form['title']
+            new_question['message'] = request.form['message']
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
+                new_question['image'] = "/static/{}".format(file.filename)
+            id_ = data_manager.add_new_question(new_question)
+            return redirect('/question/' + str(id_))
+    else:
+        logged_in = 0
+    return render_template('add_q.html', logged_in = logged_in)
 
 
 # DONE
