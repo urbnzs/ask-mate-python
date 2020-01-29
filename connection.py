@@ -68,6 +68,29 @@ def delete_answer(cursor, id,by_question = False):
                             """, {'id' : id})
 
 
+@database_common.connection_handler
+def can_i_edit_q(cursor,id):
+    cursor.execute("""
+                    SELECT users_id FROM question
+                    WHERE id = %(q_id)s
+                    """, {'q_id' : id})
+
+    result = cursor.fetchall()
+
+    return result
+
+
+@database_common.connection_handler
+def can_i_edit_a(cursor,id):
+    cursor.execute("""
+                    SELECT users_id FROM answer
+                    WHERE id = %(q_id)s
+                    """, {'q_id' : id})
+
+    result = cursor.fetchall()
+
+    return result
+
 
 @database_common.connection_handler
 def sorting_questions(cursor, order_by, direction):

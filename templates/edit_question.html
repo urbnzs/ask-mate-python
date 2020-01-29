@@ -8,20 +8,30 @@
 </head>
 <body>
 <div class="container">
-<h1>Edit Question</h1>
-<form action="/question/{{ question[0]['id'] }}/edit" method="post" enctype="multipart/form-data">
-    <label for="title_input"><h5>Question Title</h5></label><br>
-    <textarea type="text" id="title_input" name="title" rows="8" cols="80" required>{{ question[0]['title'] }}</textarea><br>
+    <h1>Edit Question</h1>
+    {% if logged_in == 1 %}
+        <form action="/question/{{ question[0]['id'] }}/edit" method="post" enctype="multipart/form-data">
+        <label for="title_input"><h5>Question Title</h5></label><br>
+        <textarea type="text" id="title_input" name="title" rows="8" cols="80"
+                  required>{{ question[0]['title'] }}</textarea><br>
 
-    <label for="message_input"><h5>Message</h5></label><br>
-    <textarea type="text" id="message_input" name="message" rows="8" cols="80" required>{{ question[0]['message'] }}</textarea><br>
+        <label for="message_input"><h5>Message</h5></label><br>
+        <textarea type="text" id="message_input" name="message" rows="8" cols="80"
+                  required>{{ question[0]['message'] }}</textarea><br>
 
-    <label for="image_input"><h5>Image</h5></label><br>
-    <input type="file" id="image_input" name="file" rows="8" cols="80" enctype="multipart/form-data"><br>
-    <br>
+        <label for="image_input"><h5>Image</h5></label><br>
+        <input type="file" id="image_input" name="file" rows="8" cols="80" enctype="multipart/form-data"><br>
+        <br>
 
-    <button type="submit" enctype="multipart/form-data">Edit Question</button>
-</form>
+        <button type="submit" enctype="multipart/form-data">Edit Question</button>
+    {% else %}
+        <h2>Please login first</h2>
+        <form action="/login">
+            <button type="submit">Go to login page</button>
+        </form>
+    {% endif %}
+
+    </form>
     <form action="/list">
         <button type="submit">Cancel</button>
     </form>

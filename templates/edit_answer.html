@@ -8,20 +8,28 @@
 </head>
 <body>
 <h1>Edit Answer</h1>
-<div class="container">
-<form action="/answer/{{ question[0]['id'] }}/edit" method="post" enctype="multipart/form-data">
+{% if logged_in == 1 %}
+    <div class="container">
+    <form action="/answer/{{ question[0]['id'] }}/edit" method="post" enctype="multipart/form-data">
 
     <label for="message_input">Message:</label><br>
-    <textarea type="text" id="message_input" name="message" rows="8" cols="80" required>{{ question[0]['message'] }}</textarea><br>
+    <textarea type="text" id="message_input" name="message" rows="8" cols="80"
+              required>{{ question[0]['message'] }}</textarea><br>
 
     <label for="image_input">Image:</label><br>
     <input type="file" id="image_input" name="file" rows="8" cols="80" enctype="multipart/form-data"><br>
     <br>
 
     <button type="submit" enctype="multipart/form-data">Edit Answer</button>
-</form>
-    <form action="/question/{{ question[0]['question_id'] }}">
-        <button type="submit">Cancel</button>
+{% else %}
+    <h2>Please login first</h2>
+    <form action="/login">
+        <button type="submit">Go to login page</button>
     </form>
+{% endif %}
+</form>
+<form action="/question/{{ question[0]['question_id'] }}">
+    <button type="submit">Cancel</button>
+</form>
 </div>
 </body>
