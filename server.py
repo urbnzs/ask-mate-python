@@ -69,7 +69,8 @@ def registration():
             password = connection.hash_password(request.form['password'])
             submission_time = datetime.now()
             reputation = 0
-            data_manager.register_user(username, password, reputation, submission_time)
+            new_user_id = data_manager.register_user(username, password, reputation, submission_time)
+            session['user_id'] = new_user_id
             return redirect('/')
         else:
             return render_template('registration_form.html', alert = 1)
@@ -371,6 +372,11 @@ def uploaded_file(filename):
 def list_all_tags():
     tags = data_manager.get_all_tags()
     return render_template('all_tags.html', tags=tags)
+
+@app.route('/all-users')
+def list_all_users():
+    users = data_manager.get_all_users()
+    return render_template('all_users.html', users=users)
 
 if __name__ == "__main__":
     app.run(

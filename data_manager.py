@@ -21,7 +21,12 @@ def register_user(cursor, username, password, reputation, submission_time):
                     INSERT INTO users (registration_time, username, password, reputation)
                     VALUES (%(submission_time)s, %(username)s, %(password)s, %(reputation)s)
                     """, {"submission_time" : submission_time ,"username" : username, "password" : password, "reputation" : reputation})
-
+    cursor.execute("""
+                    SELECT id FROM users
+                    WHERE username = %(username)s;
+                    """, {'username': username})
+    new_user_id = cursor.fetchall()
+    return new_user_id[0]['id']
 
 @database_common.connection_handler
 def user_checker(cursor, username):
@@ -357,3 +362,12 @@ def get_all_tags(cursor):
                     """)
     tags = cursor.fetchall()
     return tags
+
+@database_common.connection_handler
+def get_all_users(cursor):
+    cursor.execute("""
+                    SELECT registration_time, username, reputation 
+                    FROM users;
+                    """)
+    users = cursor.fetchall()
+    return users
