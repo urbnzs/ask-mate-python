@@ -93,6 +93,18 @@ def can_i_edit_a(cursor,id):
 
 
 @database_common.connection_handler
+def can_i_edit_q_c(cursor,id):
+    cursor.execute("""
+                    SELECT users_id FROM comment
+                    WHERE id = %(q_id)s
+                    """, {'q_id' : id})
+
+    result = cursor.fetchall()
+
+    return result
+
+
+@database_common.connection_handler
 def sorting_questions(cursor, order_by, direction):
     if direction == "asc":
         cursor.execute("""

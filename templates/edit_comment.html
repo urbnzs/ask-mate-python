@@ -9,11 +9,18 @@
 <body>
 <div class="container">
     <h1>Edit Comment</h1>
+    {% if logged_in == 1 %}
     <form action="/comment/{{ comment[0]['id'] }}/edit" method="post">
         <label for="message"><h5>Message</h5></label><br>
         <textarea type="text" id="message" name="message" rows="8" cols="80" required>{{ comment[0]['message'] }}</textarea><br>
         <button type="submit" enctype="multipart/form-data">Edit Comment</button><br><br>
     </form>
+    {% else %}
+        <h2>Please login first</h2>
+        <form action="/login">
+            <button type="submit">Go to login page</button>
+        </form>
+    {% endif %}
     <form action="/question/{{ question_id }}">
         <button type="submit">Cancel</button>
     </form>
