@@ -210,9 +210,10 @@ def add_new_answer(id):
     submission_time = datetime.now()
     vote_num = 0
     question_id = id
+    user_id = connection.get_id_by_username(session['username'])
     question = data_manager.get_question_by_id(question_id)
     new_answer = {'submission_time': submission_time, 'vote_number': vote_num, 'question_id': question_id,
-                  'message': None, 'image': None}
+                  'message': None, 'image': None, 'users_id' : user_id}
     if request.method == 'POST':
         new_answer['message'] = request.form['message']
         file = request.files['file']
@@ -228,7 +229,8 @@ def add_new_answer(id):
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_question(question_id):
     submission_time = datetime.now()
-    new_comment = {'question_id': question_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
+    user_id = connection.get_id_by_username(session['username'])
+    new_comment = {'question_id': question_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0, 'users_id' : user_id}
     if request.method == 'POST':
         new_comment['message'] = request.form['message']
         data_manager.add_comment_to_question(new_comment)
@@ -240,7 +242,8 @@ def add_new_comment_to_question(question_id):
 @app.route('/answer/<comment_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment_to_answer(comment_id):
     submission_time = datetime.now()
-    new_comment = {'answer_id': comment_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0}
+    user_id = connection.get_id_by_username(session['username'])
+    new_comment = {'answer_id': comment_id, 'message': None, 'submission_time': submission_time, 'edited_count': 0, 'users_id' : user_id}
     answer = connection.answers_by_id(comment_id, False)
     question_id = answer[0]['question_id']
     if request.method == 'POST':
