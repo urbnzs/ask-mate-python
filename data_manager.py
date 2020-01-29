@@ -4,11 +4,12 @@ import database_common
 
 @database_common.connection_handler
 def add_new_question(cursor, question):
-    values = ', '.join("'" + str(x) + "'" for x in question.values())
     cursor.execute("""
                     INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                    VALUES (%s);
-                     """ % (values))
+                    VALUES (%(submission_time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s);
+                     """, {'submission_time': question['submission_time'], 'view_number': question['view_number'],
+                           'vote_number': question['vote_number'], 'title': question['title'],
+                           'message': question['message'], 'image': question['image']})
     cursor.execute("""
                     SELECT id FROM question 
                     WHERE submission_time = %(submission_time)s;""", {'submission_time': question['submission_time']})

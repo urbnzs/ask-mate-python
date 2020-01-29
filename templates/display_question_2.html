@@ -14,6 +14,10 @@
 <div class='centerpleaseMessage'>
     <h4>{{ question[0]['message'] }}</h4>
 </div>
+<form action="/list">
+    <button type="submit">Back to Main Page</button>
+</form>
+<br>
 <h2>Tags</h2>
 {% if tags != [] %}
     {% for tag in tags %}
@@ -181,7 +185,7 @@
                     </table>
                     <form action="/answer/{{ item['id'] }}/new-comment">
                         <button type="submit">Add Comment</button>
-                    </form>
+                    </form><br>
                 </div>
             </div>
             </div>
