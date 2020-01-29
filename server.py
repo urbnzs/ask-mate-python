@@ -27,22 +27,27 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        session['password'] = request.form['password']
-        return redirect(url_for('index'))
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=password name=password>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+        username = request.form['username']
+        password = request.form['password']
+        if data_manager.user_checker(username) != True:
+            real_pass = data_manager.password_getter(username)
+            if connection.verify_password(password, real_pass):
+                session['username'] = username
+                session['password'] = password
+                session['logged_in'] = True
+                return redirect('/list')
+            else:
+                return render_template('login.html', alerted=1)
+        else:
+            return render_template('login.html', alerted=1)
+    return render_template('login.html', alerted=0)
 
 
 @app.route('/logout')
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
+    session['logged_in'] = False
     return redirect(url_for('index'))
 
 
@@ -71,10 +76,13 @@ def registration():
             reputation = 0
             new_user_id = data_manager.register_user(username, password, reputation, submission_time)
             session['user_id'] = new_user_id
+            session['username'] = username
+            session['password'] = password
+            session['logged_in'] = True
             return redirect('/')
         else:
-            return render_template('registration_form.html', alert = 1)
-    return render_template('registration_form.html', alert = 0)
+            return render_template('registration_form.html', alert=1)
+    return render_template('registration_form.html', alert=0)
 
 
 @app.route('/search')
@@ -368,15 +376,18 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+
 @app.route('/tags')
 def list_all_tags():
     tags = data_manager.get_all_tags()
     return render_template('all_tags.html', tags=tags)
 
+
 @app.route('/all-users')
 def list_all_users():
     users = data_manager.get_all_users()
     return render_template('all_users.html', users=users)
+
 
 @app.route('/<answer_id>/accept-answer')
 def accepted_answer(answer_id):
