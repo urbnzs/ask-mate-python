@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<form method="post" action="/login">
+    <input type="text" name="username" minlength="5">
+    <input type="password" name="password" minlength="5">
+    <button type="submit">Login</button>
+    <script>
+    if({{alerted}} == 1){
+        alert("Username or password does not match!");
+    }
+</script>
+</form>
+</body>
+</html>

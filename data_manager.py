@@ -43,6 +43,17 @@ def user_checker(cursor, username):
     else:
         return True
 
+@database_common.connection_handler
+def password_getter(cursor, username):
+    cursor.execute("""
+                    SELECT password FROM users
+                    WHERE username = %(username)s
+                    """, {"username": username})
+
+    password = cursor.fetchall()
+
+    return password[0]['password']
+
 
 @database_common.connection_handler
 def add_new_answer(cursor, answer):
