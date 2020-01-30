@@ -204,7 +204,7 @@ def edit_question(id):
                 data_manager.edit_question(id, question)
                 return redirect('/question/' + str(id))
         else:
-            logged_in = 0
+            logged_in = 2
     else:
         logged_in = 0
     print(logged_in)
@@ -234,7 +234,7 @@ def edit_answer(id):
                 data_manager.edit_answer(id, answer)
                 return redirect('/question/' + str(question_id))
         else:
-            logged_in = 0
+            logged_in = 2
     else:
         logged_in = 0
     return render_template('edit_answer.html', question=answer, id=id, logged_in=logged_in)
@@ -327,17 +327,15 @@ def edit_question_comment(comment_id):
 
     if session['logged_in'] is True:
         user_id = connection.get_id_by_username(session['username'])
+        logged_in = 1
         if data_manager.check_edit(user_id, connection.can_i_delete_c(comment_id)):
-            if session['logged_in'] == True:
-                logged_in = 1
-                if request.method == 'POST':
-                    edited_comment['message'] = request.form['message']
-                    data_manager.edit_comments(comment_id, edited_comment)
-                    return redirect('/question/' + str(question_id))
-            else:
-                logged_in = 0
+            if request.method == 'POST':
+                edited_comment['message'] = request.form['message']
+                data_manager.edit_comments(comment_id, edited_comment)
+                return redirect('/question/' + str(question_id))
+
         else:
-            logged_in = 0
+            logged_in = 2
     else:
         logged_in = 0
     return render_template('edit_comment.html', comment=original_comment, question_id=question_id, logged_in=logged_in)
@@ -498,11 +496,25 @@ def accepted_answer(answer_id):
 
 @app.route('/user/<user_id>')
 def user_page(user_id):
+    questions = data_manager.get_questions_by_user(user_id)
+    answers = data_manager.get_answers_by_user(user_id)
+    comments = data_manager.get_comments_by_user(user_id)
+    user_data = data_manager.get_data_of_user(user_id)
+    username = None
+    current_user_id = 0
     if session['logged_in']:
         current_user_id = connection.get_id_by_username(session['username'])
-        if current_user_id == user_id:
-            questions = data_manager.get_questions_by_user(user_id)
-        return None
+        username = session['username']
+        if str(current_user_id) == str(user_id):
+            logged_in = 1
+        else:
+            logged_in = 2
+    else:
+        logged_in = 0
+
+    return render_template('user_page.html', logged_in=logged_in, questions=questions, answers=answers, comments=comments,
+                    user_data=user_data, username=username, current_user_id=current_user_id)
+
 
 
 if __name__ == "__main__":

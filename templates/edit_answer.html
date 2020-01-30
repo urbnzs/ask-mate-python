@@ -63,6 +63,8 @@
     <br>
 
     <button type="submit" enctype="multipart/form-data">Edit Answer</button>
+{% elif logged_in == 2%}
+     <h1>You don't have the permission to edit this item.</h1><br>
 {% else %}
     <h2>Please login first</h2>
     <form action="/login">

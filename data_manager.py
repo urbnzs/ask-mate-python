@@ -419,6 +419,15 @@ def get_comments_by_user(cursor, user_id):
     comments = cursor.fetchall()
     return comments
 
+@database_common.connection_handler
+def get_data_of_user(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM users
+                    WHERE id = %(user_id)s;
+                    """, {'user_id': user_id})
+    user_data = cursor.fetchall()
+    return user_data
+
 
 
 
