@@ -279,6 +279,7 @@ def add_new_comment_to_answer(comment_id):
         if request.method == 'POST':
             new_comment['message'] = request.form['message']
             data_manager.add_comment_to_answer(new_comment)
+            return redirect('/question/' + str(question_id))
     else:
         logged_in = 0
         id = 0
@@ -288,30 +289,35 @@ def add_new_comment_to_answer(comment_id):
 # DONE
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_question_comment(comment_id):
+    submission_time = datetime.now()
     original_comment = data_manager.get_comment_by_id(comment_id)
     comment = data_manager.get_comment_by_id(comment_id)
     answer = data_manager.get_answer_by_id(original_comment[0]['answer_id'])
-    user_id = connection.get_id_by_username(session['username'])
-    question_id = 0
-    if data_manager.check_edit(comment_id, connection.can_i_edit_a(user_id)):
-        if session['logged_in'] == True:
-            logged_in = 1
-            submission_time = datetime.now()
 
-            if original_comment[0]['edited_count'] != None:
-                edited_count = int(original_comment[0]['edited_count']) + 1
+    if original_comment[0]['edited_count'] != None:
+        edited_count = int(original_comment[0]['edited_count']) + 1
+    else:
+        edited_count = 1
+    edited_comment = {'submission_time': submission_time, 'edited_count': edited_count}
+
+    if original_comment[0]['question_id'] != None:
+        question_id = original_comment[0]['question_id']
+    else:
+        answer = data_manager.get_answer_by_id(original_comment[0]['answer_id'])
+        question_id = answer[0]['question_id']
+
+
+    if session['logged_in'] is True:
+        user_id = connection.get_id_by_username(session['username'])
+        if data_manager.check_edit(user_id, connection.can_i_delete_c(comment_id)):
+            if session['logged_in'] == True:
+                logged_in = 1
+                if request.method == 'POST':
+                    edited_comment['message'] = request.form['message']
+                    data_manager.edit_comments(comment_id, edited_comment)
+                    return redirect('/question/' + str(question_id))
             else:
-                edited_count = 1
-            edited_comment = {'submission_time': submission_time, 'edited_count': edited_count}
-            if original_comment[0]['question_id'] != None:
-                question_id = original_comment[0]['question_id']
-            else:
-                answer = data_manager.get_answer_by_id(original_comment[0]['answer_id'])
-                question_id = answer[0]['question_id']
-            if request.method == 'POST':
-                edited_comment['message'] = request.form['message']
-                data_manager.edit_comments(comment_id, edited_comment)
-                return redirect('/question/' + str(question_id))
+                logged_in = 0
         else:
             logged_in = 0
     else:
