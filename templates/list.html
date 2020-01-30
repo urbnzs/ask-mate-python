@@ -5,46 +5,97 @@
     <title>Latest Questions</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
 </head>
+<body>
+
+
+<div class="navbar" id="myHeader">
+    <table>
+        <tr>
+            {% if logged_in == 1 %}
+                <td>
+                    <a href="/user/{{ user_id }}">Hello, {{ username }}!</a>
+                </td>
+            {% else %}
+                <td>
+                    <a href="/login">Login</a>
+                </td>
+            {% endif %}
+            <td>
+                <form method="post">
+                    <input type="text" id="search" name="search">
+                    <button type="submit">Search</button>
+                </form>
+            </td>
+
+            <td>
+                <form action="/add-question">
+                    <button type="submit">Add New Question</button>
+                </form>
+            </td>
+            <td>
+                <form action="/all-users">
+                    <button type="submit">All users</button>
+                </form>
+            </td>
+            <td>
+                <form action="/tags">
+                    <button type="submit">All tags</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<br>
+<h1>All Questions</h1>
+<br>
+
 <div class="container">
     <div class="table-wrap">
         <table class="table">
             <form action="/list" method="get">
                 <tr>
                     <th>
-                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/id/asc";'></button><br>
+                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/id/asc";'></button>
+                        <br>
                         ID<br>
                         <button class="fas fa-angle-down" onclick='this.form.action="/list/ordered/id/desc";'></button>
                     </th>
                     <th>
                         <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/submission_time/asc";'></button><br>
+                                onclick='this.form.action="/list/ordered/submission_time/asc";'></button>
+                        <br>
                         Submission Time<br>
                         <button class="fas fa-angle-down"
                                 onclick='this.form.action="/list/ordered/submission_time/desc";'></button>
                     </th>
                     <th>
                         <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/view_number/asc";'></button><br>
+                                onclick='this.form.action="/list/ordered/view_number/asc";'></button>
+                        <br>
                         View Number<br>
                         <button class="fas fa-angle-down"
                                 onclick='this.form.action="/list/ordered/view_number/desc";'></button>
                     </th>
                     <th>
                         <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/vote_number/asc";'></button><br>
+                                onclick='this.form.action="/list/ordered/vote_number/asc";'></button>
+                        <br>
                         Vote Number<br>
                         <button class="fas fa-angle-down"
                                 onclick='this.form.action="/list/ordered/vote_number/desc";'></button>
                     </th>
                     <th>
-                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/title/asc";'></button><br>
+                        <button class="fas fa-angle-up" onclick='this.form.action="/list/ordered/title/asc";'></button>
+                        <br>
                         Title<br>
                         <button class="fas fa-angle-down"
                                 onclick='this.form.action="/list/ordered/title/desc";'></button>
                     </th>
                     <th>
                         <button class="fas fa-angle-up"
-                                onclick='this.form.action="/list/ordered/message/asc";'></button><br>
+                                onclick='this.form.action="/list/ordered/message/asc";'></button>
+                        <br>
                         Message<br>
                         <button class="fas fa-angle-down"
                                 onclick='this.form.action="/list/ordered/message/desc";'></button>
@@ -91,14 +142,9 @@
                     </td>
                 </tr>
             {% endfor %}
-
-
         </table>
-        <br><br>
-        <form action="/add-question">
-            <button type="submit">Add New Question</button>
-        </form>
     </div>
-    </body>
+</div>
+</body>
 </html>
 

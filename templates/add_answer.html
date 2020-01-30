@@ -7,12 +7,15 @@
     <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
+
+
 <div class="container">
     <h1>Add a New Answer</h1><br>
     <h3>{{ question[0]['title'] }}</h3>
     <h4>{{ question[0]['message'] }}</h4><br>
     {% if logged_in == 1 %}
-    <form action="/question/{{ id }}/new-answer" method="post" enctype="multipart/form-data">
+        <form action="/question/{{ id }}/new-answer" method="post" enctype="multipart/form-data">
 
         <label for="message_input"><h5>Message</h5></label>
         <textarea type="text" id="message_input" name="message" rows="8" cols="80" required></textarea>
@@ -25,10 +28,10 @@
         <button type="sumbit">Post Answer</button><br>
         <br>
     {% else %}
-            <h2>Please login first</h2>
-            <form action="/login">
-                <button type="submit">Go to login page</button>
-            </form>
+        <h2>Please login first</h2>
+        <form action="/login">
+            <button type="submit">Go to login page</button>
+        </form>
     {% endif %}
     </form>
     <form action="/question/{{ id }}">

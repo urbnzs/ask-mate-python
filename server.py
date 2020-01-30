@@ -58,12 +58,21 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def list_latest_five():
+    user_id = None
+    username = None
+    if session['logged_in'] == True:
+        logged_in = 1
+        username = session['username']
+        user_id = connection.get_id_by_username(session['username'])
+    else:
+
+        logged_in = 0
     if request.method == 'POST':
         word = request.form['search']
         return redirect('/search?q={}'.format(word))
 
     questions = data_manager.get_last_five()
-    return render_template('list_latest_five.html', list_of_data=questions)
+    return render_template('list_latest_five.html', list_of_data=questions, user_id=user_id, logged_in=logged_in, username = username)
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -116,9 +125,18 @@ def search():
 # DONE
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
+    username = None
+    user_id = None
     questions = data_manager.list_questions()
+    if session['logged_in'] == True:
+        username = session['username']
+        user_id = connection.get_id_by_username(session['username'])
+        logged_in = 1
+    else:
+        logged_in = 0
 
-    return render_template('list.html', list_of_data=questions)
+    return render_template('list.html', list_of_data=questions, logged_in=logged_in, username=username,
+                           user_id=user_id)
 
 
 # DONE
@@ -149,7 +167,7 @@ def add_question():
         vote_num = 0
         user_id = connection.get_id_by_username(session['username'])
         new_question = {'submission_time': submission_time, 'view_number': view_num, 'vote_number': vote_num,
-                        'title': None, 'message': None, 'image': None, 'users_id' : user_id}
+                        'title': None, 'message': None, 'image': None, 'users_id': user_id}
         if request.method == 'POST':
             new_question['title'] = request.form['title']
             new_question['message'] = request.form['message']
@@ -161,7 +179,7 @@ def add_question():
             return redirect('/question/' + str(id_))
     else:
         logged_in = 0
-    return render_template('add_q.html', logged_in = logged_in)
+    return render_template('add_q.html', logged_in=logged_in)
 
 
 # DONE
@@ -199,6 +217,7 @@ def edit_answer(id):
     answer = data_manager.get_answer_by_id(id)
     if session['logged_in'] == True:
         user_id = connection.get_id_by_username(session['username'])
+
         if data_manager.check_edit(user_id, connection.can_i_edit_a(id)):
             logged_in = 1
             question_id = answer[0]['question_id']
@@ -243,7 +262,8 @@ def add_new_answer(id):
             return redirect('/question/' + str(question_id))
     else:
         logged_in = 0
-    return render_template('add_answer.html', question=question, id=id, logged_in=logged_in)
+    return render_template('add_answer.html', question=question, id=id, logged_in=logged_in, user_id=user_id,
+                           username=session['username'])
 
 
 # DONE
@@ -261,7 +281,7 @@ def add_new_comment_to_question(question_id):
             return redirect('/question/' + str(question_id))
     else:
         logged_in = 0
-        id=0
+        id = 0
     return render_template('add_comment.html', id=question_id, logged_in=logged_in)
 
 
@@ -305,7 +325,6 @@ def edit_question_comment(comment_id):
         answer = data_manager.get_answer_by_id(original_comment[0]['answer_id'])
         question_id = answer[0]['question_id']
 
-
     if session['logged_in'] is True:
         user_id = connection.get_id_by_username(session['username'])
         if data_manager.check_edit(user_id, connection.can_i_delete_c(comment_id)):
@@ -321,7 +340,7 @@ def edit_question_comment(comment_id):
             logged_in = 0
     else:
         logged_in = 0
-    return render_template('edit_comment.html', comment=original_comment, question_id=question_id, logged_in = logged_in)
+    return render_template('edit_comment.html', comment=original_comment, question_id=question_id, logged_in=logged_in)
 
 
 # DONE
@@ -476,6 +495,7 @@ def accepted_answer(answer_id):
     connection.gain_reputation_by_accepted(answer_id)
     return redirect('/question/' + str(question_id))
 
+
 @app.route('/user/<user_id>')
 def user_page(user_id):
     if session['logged_in']:
@@ -490,10 +510,4 @@ if __name__ == "__main__":
         debug=True,
         port=5000)
 
-
-
-
-
-
-
-#TODO: Edit comment, edit answer,
+# TODO: Edit comment, edit answer,
