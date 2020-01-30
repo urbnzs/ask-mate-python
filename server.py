@@ -476,11 +476,25 @@ def accepted_answer(answer_id):
 
 @app.route('/user/<user_id>')
 def user_page(user_id):
+    questions = data_manager.get_questions_by_user(user_id)
+    answers = data_manager.get_answers_by_user(user_id)
+    comments = data_manager.get_comments_by_user(user_id)
+    user_data = data_manager.get_data_of_user(user_id)
+    username = None
+    current_user_id = 0
     if session['logged_in']:
         current_user_id = connection.get_id_by_username(session['username'])
-        if current_user_id == user_id:
-            questions = data_manager.get_questions_by_user(user_id)
-        return None
+        username = session['username']
+        if str(current_user_id) == str(user_id):
+            logged_in = 1
+        else:
+            logged_in = 2
+    else:
+        logged_in = 0
+
+    return render_template('user_page.html', logged_in=logged_in, questions=questions, answers=answers, comments=comments,
+                    user_data=user_data, username=username, current_user_id=current_user_id)
+
 
 
 if __name__ == "__main__":
