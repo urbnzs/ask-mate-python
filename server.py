@@ -48,7 +48,7 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     session['logged_in'] = False
-    return redirect(url_for('index'))
+    return redirect('/list')
 
 
 def allowed_file(filename):
@@ -151,10 +151,11 @@ def display_question(id):
     comments = data_manager.get_comment_by_question_id(id)
     connection.view_number(id)
     tags = data_manager.get_tag_name_by_question_id(id)
+    question_user = data_manager.get_data_of_user(question[0]['users_id'])
     return render_template('display_question_2.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
-                           tags=tags)
+                           tags=tags, question_user=question_user[0]['username'])
 
 
 # DONE

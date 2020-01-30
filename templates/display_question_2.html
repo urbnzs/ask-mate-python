@@ -6,6 +6,34 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='display_question.css') }}">
 </head>
 <body>
+<div class="navbar" id="myHeader" style="margin: 0px">
+    <table>
+        <tr>
+            <td>
+                <form action="/list">
+                    <button type="submit">Back to Main Page</button>
+                </form>
+            </td>
+            <td>
+                <form action="/question/{{ question_id }}/new-tag">
+                    <button type="submit">Add New Tag to Question</button>
+                </form>
+            </td>
+            <td>
+                <form action="/question/{{ question_id }}/new-comment">
+                    <button type="submit">Add New Comment to Question</button>
+                </form>
+            </td>
+            <td>
+                <form action="/question/{{ question_id }}/new-answer">
+                    <button type="submit">Add Answer</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<br><br><br>
 <div class='centerplease'>
     <h1>{{ question[0]['title'] }}</h1>
 </div>
@@ -14,9 +42,10 @@
 <div class='centerpleaseMessage'>
     <h4>{{ question[0]['message'] }}</h4>
 </div>
-<form action="/list">
-    <button type="submit">Back to Main Page</button>
-</form>
+<div style="text-align: center">
+    <h5>By {{ question_user }}</h5>
+</div>
+
 <br>
 <h2>Tags</h2>
 {% if tags != [] %}
@@ -26,9 +55,7 @@
 {% else %}
     <h5>No tags yet.</h5>
 {% endif %}
-<form action="/question/{{ question_id }}/new-tag">
-    <button type="submit">Add New Tag</button>
-</form>
+
 <br>
 <div class="content">
         {% if comments == [] %}
@@ -65,12 +92,12 @@
                             <h5 style="color: #1F2739">Edited {{ comment['edited_count'] }} time(s)</h5>
                         </td>
                     {% endif %}
-                    <td>
+                    <td style="text-align: center; padding: 15px">
                         <form action="/comment/{{ comment['id'] }}/edit">
                             <button type="submit">Edit Comment</button>
                         </form>
                     </td>
-                    <td>
+                    <td style="content-align: center; padding: 15px">
                         <form action="/comment/{{ comment['id'] }}/delete">
                             <button type="submit">Delete Comment</button>
                         </form>
@@ -82,15 +109,7 @@
         </table>
         </div>
 </div>
-<form action="/question/{{ question_id }}/new-comment">
-    <button type="submit">Add Comment</button>
-</form>
 <br>
-<br>
-<br>
-<form action="/question/{{ question_id }}/new-answer">
-    <button type="submit">Add Answer</button>
-</form>
 <br>
 {% for item in answers %}
     <div class="tabs">
@@ -134,7 +153,7 @@
                                     <button type="submit">Accept Answer</button>
                                 </form>
                             {% else %}
-                                <button type="button" disabled>Accepted</button>
+                                <button type="button" disabled style="color: #86989B; background: #464A52">Accepted</button>
                             {% endif %}
                         </td>
                     </tr>

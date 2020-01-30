@@ -15,6 +15,11 @@
                 <td>
                     <a href="/user/{{ user_id }}">Hello, {{ username }}!</a>
                 </td>
+                <td>
+                    <form action="/logout">
+                        <button type="submit">Log Out</button>
+                    </form>
+                </td>
             {% else %}
                 <td>
                     <a href="/login">Login</a>
@@ -34,19 +39,19 @@
             </td>
             <td>
                 <form action="/all-users">
-                    <button type="submit">All users</button>
+                    <button type="submit">All Users</button>
                 </form>
             </td>
             <td>
                 <form action="/tags">
-                    <button type="submit">All tags</button>
+                    <button type="submit">All Tags</button>
                 </form>
             </td>
         </tr>
     </table>
 </div>
 
-<br>
+<br><br><br>
 <h1>All Questions</h1>
 <br>
 
@@ -132,12 +137,12 @@
 
                     <td>
                         <form action="/question/{{ line['id'] }}/edit">
-                            <button type="submit">Edit Question</button>
+                            <button type="submit">Edit</button>
                         </form>
                     </td>
                     <td>
                         <form action="/question/{{ line['id'] }}/delete">
-                            <button type="submit">Delete Question</button>
+                            <button type="submit">Delete</button>
                         </form>
                     </td>
                 </tr>
