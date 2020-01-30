@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
+</head>
+<body>
+<div class="container">
+    {% if logged_in == 1 %}
+        <h1>User Page for {{ username }}</h1><br>
+        <h5>User Info</h5><br>
+        <table border="0" align="center">
+            <tr>
+                <td align="left">ID: </td>
+                <td align="right">{{ user_data[0]['id'] }}</td>
+            </tr>
+            <tr>
+                <td align="left">Time of Registration: </td>
+                <td align="'right">{{ user_data[0]['registration_time'] }}</td>
+            </tr>
+            <tr>
+                <td align="left">Username: </td>
+                <td align="'right">{{ user_data[0]['username'] }}</td>
+            </tr>
+            <tr>
+                <td align="left">Reputation Points: </td>
+                <td align="'right">{{ user_data[0]['reputation'] }}</td>
+            </tr>
+        </table><br>
+        <h5>Questions by {{ username }}</h5><br>
+        {% if questions %}
+            <table class="table" align="center">
+                <th>Submission Time</th>
+                <th>View Number</th>
+                <th>Vote Number</th>
+                <th>Title</th>
+                <th>Message</th>
+                <th>Image</th>
+            {% for question in questions %}
+                <tr>
+                    <td>{{ question['submission_time'] }}</td>
+                    <td>{{ question['view_number'] }}</td>
+                    <td>{{ question['vote_number'] }}</td>
+                    <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+                    <td>{{ question['message'] }}</td>
+                    <td><a href="{{ question['image'] }}"><img src="{{ question['image'] }} " width="100" height="100"></a></td>
+                    <td>
+                        <form action="/question/{{ question['id'] }}/edit">
+                            <button type="submit">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/question/{{ question['id'] }}/delete">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table><br>
+        {% else %}
+            <h6 style="font-size: 16px">No questions yet.</h6><br>
+        {% endif %}
+        <h5>Answers by {{ username }}</h5><br>
+        {% if answers %}
+            <table class="table" align="center">
+                <tr>
+                    <th>Submission Time</th>
+                    <th>Vote Number</th>
+                    <th>Question Id</th>
+                    <th>Message</th>
+                    <th>Image</th>
+                </tr>
+                {% for answer in answers %}
+                    <tr>
+                        <td>{{ answer['submission_time'] }}</td>
+                        <td>{{ answer['vote_number'] }}</td>
+                        <td><a href="/question/{{ answer['question_id'] }}">{{ answer['question_id'] }}</a></td>
+                        <td>{{ answer['message'] }}</td>
+                        <td><a href="{{ answer['image'] }}"><img src="{{ answer['image'] }} " width="100" height="100"></a></td>
+                        <td>
+                            {% if answer['accepted'] %}
+                                Accepted.
+                            {% else %}
+                                Not yet accepted.
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="/answer/{{ answer['id'] }}/edit">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/answer/{{ answer['id'] }}/delete">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table><br>
+
+        {% else %}
+            <h6 style="font-size: 16px">No answers yet.</h6><br>
+        {% endif %}
+
+        <h5>Comments by {{ username }}</h5><br>
+        {% if comments %}
+            <table class="table" align="center">
+                <tr>
+                    <th>Submission Time</th>
+                    <th>Question Id</th>
+                    <th>Answer Id</th>
+                    <th>Message</th>
+                    <th>Edited Count</th>
+                </tr>
+                {% for comment in comments %}
+                    <tr>
+                        <td>{{ comment['submission_time'] }}</td>
+                        <td>{{ comment['question_id'] }}</td>
+                        <td>{{ comment['answer_id'] }}</td>
+                        <td>{{ comment['message'] }}</td>
+                        <td>{{ comment['edited_count'] }}</td>
+                        <td>
+                            <form action="/comment/{{ comment['id'] }}/edit">
+                                <button type="submit">Edit Comment</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/comment/{{ comment['id'] }}/delete">
+                                <button type="submit">Delete Comment</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table><br>
+        {% else %}
+            <h6 style="font-size: 16px">No comments yet.</h6><br>
+        {% endif %}
+
+    {% elif logged_in == 2 %}
+        <h1>User Page</h1><br>
+        <h5>You don't have the permission to access this user page.</h5><br>
+        <form action="/user/{{ current_user_id }}">
+            <button type="submit">Go to Your User Page</button>
+        </form><br>
+        <form action="/">
+            <button type="submit">Go Back to the Main Page</button>
+        </form>
+    {% else %}
+        <h1>User Page</h1><br>
+        <h2>Please log in first</h2>
+        <form action="/login">
+            <button type="submit">Go to login page</button>
+        </form>
+        <form action="/">
+            <button type="submit">Go Back to the Main Page</button>
+        </form>
+    {% endif %}
+</div>
+</body>
+</html>
