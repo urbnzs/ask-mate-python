@@ -159,7 +159,7 @@ def display_question(id):
     return render_template('display_question_2.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
-                           tags=tags, logged_in = logged_in, question_user=question_user)
+                           tags=tags, logged_in = logged_in, question_user = question_user)
 
 
 # DONE
