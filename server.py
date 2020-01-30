@@ -186,7 +186,7 @@ def edit_question(id):
                 data_manager.edit_question(id, question)
                 return redirect('/question/' + str(id))
         else:
-            logged_in = 0
+            logged_in = 2
     else:
         logged_in = 0
     print(logged_in)
@@ -215,7 +215,7 @@ def edit_answer(id):
                 data_manager.edit_answer(id, answer)
                 return redirect('/question/' + str(question_id))
         else:
-            logged_in = 0
+            logged_in = 2
     else:
         logged_in = 0
     return render_template('edit_answer.html', question=answer, id=id, logged_in=logged_in)
@@ -308,17 +308,15 @@ def edit_question_comment(comment_id):
 
     if session['logged_in'] is True:
         user_id = connection.get_id_by_username(session['username'])
+        logged_in = 1
         if data_manager.check_edit(user_id, connection.can_i_delete_c(comment_id)):
-            if session['logged_in'] == True:
-                logged_in = 1
-                if request.method == 'POST':
-                    edited_comment['message'] = request.form['message']
-                    data_manager.edit_comments(comment_id, edited_comment)
-                    return redirect('/question/' + str(question_id))
-            else:
-                logged_in = 0
+            if request.method == 'POST':
+                edited_comment['message'] = request.form['message']
+                data_manager.edit_comments(comment_id, edited_comment)
+                return redirect('/question/' + str(question_id))
+
         else:
-            logged_in = 0
+            logged_in = 2
     else:
         logged_in = 0
     return render_template('edit_comment.html', comment=original_comment, question_id=question_id, logged_in = logged_in)
