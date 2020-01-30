@@ -83,27 +83,26 @@
                 <td>
                     <h5 style="color: #1F2739">{{ comment['submission_time'] }}</h5>
                 </td>
-                {% if comment['edited_count'] == None %}
-                    <td>
-                        <h5 style="color: #1F2739">There are 0 edits.</h5>
+                    {% if comment['edited_count'] == None %}
+                        <td>
+                            <h5 style="color: #1F2739">There are 0 edits.</h5>
+                        </td>
+                    {% else %}
+                        <td>
+                            <h5 style="color: #1F2739">Edited {{ comment['edited_count'] }} time(s)</h5>
+                        </td>
+                    {% endif %}
+                    <td style="text-align: center; padding: 15px">
+                        <form action="/comment/{{ comment['id'] }}/edit">
+                            <button type="submit">Edit Comment</button>
+                        </form>
                     </td>
-                {% else %}
-                    <td>
-                        <h5 style="color: #1F2739">Edited {{ comment['edited_count'] }} time(s)</h5>
+                    <td style="content-align: center; padding: 15px">
+                        <form action="/comment/{{ comment['id'] }}/delete">
+                            <button type="submit">Delete Comment</button>
+                        </form>
                     </td>
-                {% endif %}
-                <td>
-                    <form action="/comment/{{ comment['id'] }}/edit">
-                        <button type="submit">Edit Comment</button>
-                    </form>
-                </td>
-                <td>
-                    <form action="/comment/{{ comment['id'] }}/delete">
-                        <button type="submit">Delete Comment</button>
-                    </form>
-                </td>
-            </tr>
-
+                </tr>
         {% endfor %}
     {% endif %}
     </table>

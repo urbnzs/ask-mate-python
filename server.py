@@ -160,8 +160,6 @@ def display_question(id):
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
                            tags=tags, logged_in = logged_in, question_user = question_user)
-
-
 # DONE
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
