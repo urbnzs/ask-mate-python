@@ -4,51 +4,8 @@
     <meta charset="UTF-8">
     <title>Edit Answer</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
-    <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
-
-
-
-<nav class="nav">
-  <input type="checkbox" class="nav__cb" id="menu-cb"/>
-  <div class="nav__content">
-    <ul class="nav__items">
-      <li class="nav__item">
-        <span class="nav__item-text">
-          Home
-        </span>
-      </li>
-      <li class="nav__item">
-        <span class="nav__item-text">
-            Text
-        </span>
-      </li>
-      <li class="nav__item">
-        <span class="nav__item-text">
-          User List
-        </span>
-      </li>
-      <li class="nav__item">
-        <span class="nav__item-text">
-          {% if logged_in == 1 %}
-            <p>Hello, {{ username }}!</p>
-            {% elif logged_in == 2 %}
-            <p>Hello, {{ username }}!</p>
-            {% else %}
-            <button formaction="/login">Login</button>
-
-        </span>
-      </li>
-    </ul>
-  </div>
-  <label class="nav__btn" for="menu-cb"></label>
-</nav>
-
-
-
-
 <h1>Edit Answer</h1>
 {% if logged_in == 1 %}
     <div class="container">
@@ -64,7 +21,7 @@
 
     <button type="submit" enctype="multipart/form-data">Edit Answer</button>
 {% elif logged_in == 2%}
-     <h1>You don't have the permission to edit this item.</h1><br>
+     <h5>You don't have the permission to edit this item.</h5><br>
 {% else %}
     <h2>Please login first</h2>
     <form action="/login">

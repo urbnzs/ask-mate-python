@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, send_from_directory, session, url_for, flash
 from werkzeug.utils import escape
-import time
+
 import connection
 import data_manager
 from datetime import datetime
@@ -48,7 +48,7 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     session['logged_in'] = False
-    return redirect(url_for('index'))
+    return redirect('/list')
 
 
 def allowed_file(filename):
@@ -153,12 +153,13 @@ def display_question(id):
         comments = data_manager.get_comment_by_question_id(id)
         connection.view_number(id)
         tags = data_manager.get_tag_name_by_question_id(id)
+        question_user = data_manager.get_data_of_user(question[0]['users_id'])
     else:
         logged_in = 0
     return render_template('display_question_2.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
-                           tags=tags, logged_in = logged_in)
+                           tags=tags, logged_in=logged_in,question_user=question_user)
 
 
 # DONE
@@ -440,51 +441,36 @@ def list_ordered(order, direct):
 # DONE
 @app.route('/question/<question_id>/vote-up')
 def vote_up_question(question_id):
-    if session['logged_in'] == True:
-        connection.voting_question(question_id, True)
-        connection.gain_reputation_by_question(question_id)
-    else:
-        flash("You have to login first!", category='notice')
+    connection.voting_question(question_id, True)
+    connection.gain_reputation_by_question(question_id)
     return redirect('/list')
 
 
 # DONE
 @app.route('/question/<question_id>/vote-down')
 def vote_down_question(question_id):
-    if session['logged_in'] == True:
-        connection.voting_question(question_id, False)
-        connection.lose_reputation_by_question(question_id)
-    else:
-        flash("You have to login first!", category='notice')
-        time.sleep(2)
+    connection.voting_question(question_id, False)
+    connection.lose_reputation_by_question(question_id)
     return redirect('/list')
 
 
 # DONE
 @app.route('/answer/<answer_id>/vote-up')
 def vote_up_answer(answer_id):
-    if session['logged_in'] == True:
-        connection.voting_answers(answer_id, True)
-        voted_answer = connection.answers_by_id(answer_id, False)
-        question_id = voted_answer[0]['question_id']
-        connection.gain_reputation_by_answer(answer_id)
-    else:
-        flash("You have to login first!", category='notice')
-        time.sleep(2)
+    connection.voting_answers(answer_id, True)
+    voted_answer = connection.answers_by_id(answer_id, False)
+    question_id = voted_answer[0]['question_id']
+    connection.gain_reputation_by_answer(answer_id)
     return redirect('/question/' + str(question_id))
 
 
 # DONE
 @app.route('/answer/<answer_id>/vote-down')
 def vote_down_answer(answer_id):
-    if session['logged_in'] == True:
-        connection.voting_answers(answer_id, False)
-        voted_answer = connection.answers_by_id(answer_id, False)
-        question_id = voted_answer[0]['question_id']
-        connection.lose_reputation_by_answer(answer_id)
-    else:
-        flash("You have to login first!", category='notice')
-        time.sleep(2)
+    connection.voting_answers(answer_id, False)
+    voted_answer = connection.answers_by_id(answer_id, False)
+    question_id = voted_answer[0]['question_id']
+    connection.lose_reputation_by_answer(answer_id)
     return redirect('/question/' + str(question_id))
 
 

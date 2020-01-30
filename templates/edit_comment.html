@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Edit Comment</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_style.css') }}">
-    <script src="https://kit.fontawesome.com/a4c27e0fdb.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="container">
@@ -16,7 +15,7 @@
         <button type="submit" enctype="multipart/form-data">Edit Comment</button><br><br>
     </form>
     {% elif logged_in == 2 %}
-         <h1>You don't have the permission to edit this item.</h1><br>
+         <h5>You don't have the permission to edit this item.</h5><br>
     {% else %}
         <h2>Please login first</h2>
         <form action="/login">
