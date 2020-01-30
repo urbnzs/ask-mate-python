@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, send_from_directory, session, url_for, flash
 from werkzeug.utils import escape
-
+import time
 import connection
 import data_manager
 from datetime import datetime
@@ -142,19 +142,23 @@ def list_questions():
 # DONE
 @app.route('/question/<id>')
 def display_question(id):
-    question = connection.get_question_by_id(id)
-    answers = connection.answers_by_id(id)
-    answer_ids = [str(answer['id']) for answer in answers]
-    answer_comments = data_manager.get_comments_for_multiple_answers(answer_ids)
-    answer_ids_for_answer_comments = [comment['answer_id'] for comment in answer_comments]
-    question_id = id
-    comments = data_manager.get_comment_by_question_id(id)
-    connection.view_number(id)
-    tags = data_manager.get_tag_name_by_question_id(id)
+    if session['logged_in'] == True:
+        logged_in = 1
+        question = connection.get_question_by_id(id)
+        answers = connection.answers_by_id(id)
+        answer_ids = [str(answer['id']) for answer in answers]
+        answer_comments = data_manager.get_comments_for_multiple_answers(answer_ids)
+        answer_ids_for_answer_comments = [comment['answer_id'] for comment in answer_comments]
+        question_id = id
+        comments = data_manager.get_comment_by_question_id(id)
+        connection.view_number(id)
+        tags = data_manager.get_tag_name_by_question_id(id)
+    else:
+        logged_in = 0
     return render_template('display_question_2.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
-                           tags=tags)
+                           tags=tags, logged_in = logged_in)
 
 
 # DONE
@@ -436,36 +440,51 @@ def list_ordered(order, direct):
 # DONE
 @app.route('/question/<question_id>/vote-up')
 def vote_up_question(question_id):
-    connection.voting_question(question_id, True)
-    connection.gain_reputation_by_question(question_id)
+    if session['logged_in'] == True:
+        connection.voting_question(question_id, True)
+        connection.gain_reputation_by_question(question_id)
+    else:
+        flash("You have to login first!", category='notice')
     return redirect('/list')
 
 
 # DONE
 @app.route('/question/<question_id>/vote-down')
 def vote_down_question(question_id):
-    connection.voting_question(question_id, False)
-    connection.lose_reputation_by_question(question_id)
+    if session['logged_in'] == True:
+        connection.voting_question(question_id, False)
+        connection.lose_reputation_by_question(question_id)
+    else:
+        flash("You have to login first!", category='notice')
+        time.sleep(2)
     return redirect('/list')
 
 
 # DONE
 @app.route('/answer/<answer_id>/vote-up')
 def vote_up_answer(answer_id):
-    connection.voting_answers(answer_id, True)
-    voted_answer = connection.answers_by_id(answer_id, False)
-    question_id = voted_answer[0]['question_id']
-    connection.gain_reputation_by_answer(answer_id)
+    if session['logged_in'] == True:
+        connection.voting_answers(answer_id, True)
+        voted_answer = connection.answers_by_id(answer_id, False)
+        question_id = voted_answer[0]['question_id']
+        connection.gain_reputation_by_answer(answer_id)
+    else:
+        flash("You have to login first!", category='notice')
+        time.sleep(2)
     return redirect('/question/' + str(question_id))
 
 
 # DONE
 @app.route('/answer/<answer_id>/vote-down')
 def vote_down_answer(answer_id):
-    connection.voting_answers(answer_id, False)
-    voted_answer = connection.answers_by_id(answer_id, False)
-    question_id = voted_answer[0]['question_id']
-    connection.lose_reputation_by_answer(answer_id)
+    if session['logged_in'] == True:
+        connection.voting_answers(answer_id, False)
+        voted_answer = connection.answers_by_id(answer_id, False)
+        question_id = voted_answer[0]['question_id']
+        connection.lose_reputation_by_answer(answer_id)
+    else:
+        flash("You have to login first!", category='notice')
+        time.sleep(2)
     return redirect('/question/' + str(question_id))
 
 
