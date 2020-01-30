@@ -142,22 +142,24 @@ def list_questions():
 # DONE
 @app.route('/question/<id>')
 def display_question(id):
-    question = connection.get_question_by_id(id)
-    answers = connection.answers_by_id(id)
-    answer_ids = [str(answer['id']) for answer in answers]
-    answer_comments = data_manager.get_comments_for_multiple_answers(answer_ids)
-    answer_ids_for_answer_comments = [comment['answer_id'] for comment in answer_comments]
-    question_id = id
-    comments = data_manager.get_comment_by_question_id(id)
-    connection.view_number(id)
-    tags = data_manager.get_tag_name_by_question_id(id)
-    question_user = data_manager.get_data_of_user(question[0]['users_id'])
+    if session['logged_in'] == True:
+        logged_in = 1
+        question = connection.get_question_by_id(id)
+        answers = connection.answers_by_id(id)
+        answer_ids = [str(answer['id']) for answer in answers]
+        answer_comments = data_manager.get_comments_for_multiple_answers(answer_ids)
+        answer_ids_for_answer_comments = [comment['answer_id'] for comment in answer_comments]
+        question_id = id
+        comments = data_manager.get_comment_by_question_id(id)
+        connection.view_number(id)
+        tags = data_manager.get_tag_name_by_question_id(id)
+        question_user = data_manager.get_data_of_user(question[0]['users_id'])
+    else:
+        logged_in = 0
     return render_template('display_question_2.html', question=question, answers=answers, question_id=question_id,
                            comments=comments, answer_comments=answer_comments,
                            answer_ids=answer_ids_for_answer_comments,
-                           tags=tags, question_user=question_user[0]['username'])
-
-
+                           tags=tags, logged_in = logged_in, question_user = question_user)
 # DONE
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():

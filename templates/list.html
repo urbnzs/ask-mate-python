@@ -119,13 +119,17 @@
                     <td>{{ line['view_number'] }}</td>
 
                     <td>
-                        <form action="/question/{{ line['id'] }}/vote-up">
-                            <button type="submit"><i class="fas fa-angle-up"></i></button>
-                        </form>
+                        {% if logged_in == 1 %}
+                            <form action="/question/{{ line['id'] }}/vote-up">
+                                <button type="submit"><i class="fas fa-angle-up"></i></button>
+                            </form>
+                        {% endif %}
                         {{ line['vote_number'] }}
-                        <form action="/question/{{ line['id'] }}/vote-down">
-                            <button type="submit"><i class="fas fa-angle-down"></i></button>
-                        </form>
+                        {% if logged_in == 1 %}
+                            <form action="/question/{{ line['id'] }}/vote-down">
+                                <button type="submit"><i class="fas fa-angle-down"></i></button>
+                            </form>
+                        {% endif %}
                     </td>
 
                     <td><a href="/question/{{ line['id'] }}"> {{ line['title'] }} </a></td>
