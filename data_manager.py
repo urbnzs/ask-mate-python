@@ -391,3 +391,37 @@ def check_edit(to_edit_id, user_id):
         return True
     else:
         return False
+
+@database_common.connection_handler
+def get_questions_by_user(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM question
+                    WHERE users_id = %(user_id)s;
+                    """, {'user_id': user_id})
+    questions = cursor.fetchall()
+    return questions
+
+@database_common.connection_handler
+def get_answers_by_user(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM answer
+                    WHERE users_id = %(user_id)s;
+                    """, {'user_id': user_id})
+    answers = cursor.fetchall()
+    return answers
+
+@database_common.connection_handler
+def get_comments_by_user(cursor, user_id):
+    cursor.execute("""
+                    SELECT * FROM comment
+                    WHERE users_id = %(user_id)s;
+                    """, {'user_id': user_id})
+    comments = cursor.fetchall()
+    return comments
+
+
+
+
+
+
+
