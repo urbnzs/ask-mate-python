@@ -66,7 +66,7 @@
 :root {
   --htmlFontSize: 100%;
 
-  --bodyBackgroundColor: #2c3338;
+  --bodyBackgroundColor: #1F2739;
   --bodyColor: var(--baseColor);
   --bodyFontFamily: 'Open Sans';
   --bodyFontFamilyFallback: sans-serif;
@@ -112,6 +112,7 @@ a {
 a:focus,
 a:hover {
   text-decoration: underline;
+  color: #FB667A
 }
 
 /* modules/form.css */
@@ -165,9 +166,9 @@ input[type='submit'] {
 
   --loginLabelBackgroundColor: #363b41;
 
-  --loginSubmitBackgroundColor: #ea4c88;
+  --loginSubmitBackgroundColor: #FB667A;
   --loginSubmitColor: #eee;
-  --loginSubmitHoverBackgroundColor: #d44179;
+  --loginSubmitHoverBackgroundColor: #FB667A;
 }
 
 .login {
@@ -205,7 +206,7 @@ input[type='submit'] {
 }
 
 .login input[type='submit'] {
-  background-color: var(--loginSubmitBackgroundColor);
+  background-color: #4DC3FA;
   color: var(--loginSubmitColor);
   font-weight: 700;
   text-transform: uppercase;
@@ -213,7 +214,7 @@ input[type='submit'] {
 
 .login input[type='submit']:focus,
 .login input[type='submit']:hover {
-  background-color: var(--loginSubmitHoverBackgroundColor);
+  background-color: #FB667A;
 }
 
 /* modules/text.css */
