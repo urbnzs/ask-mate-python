@@ -282,8 +282,7 @@ def add_new_comment_to_answer(comment_id):
             return redirect('/question/' + str(question_id))
     else:
         logged_in = 0
-        id = 0
-    return render_template('add_comment_to_answer.html', id=comment_id, logged_in=logged_in)
+    return render_template('add_comment_to_answer.html', id=comment_id, logged_in=logged_in, question_id=question_id)
 
 
 # DONE
@@ -476,6 +475,14 @@ def accepted_answer(answer_id):
     question_id = connection.accept_answer(answer_id)
     connection.gain_reputation_by_accepted(answer_id)
     return redirect('/question/' + str(question_id))
+
+@app.route('/user/<user_id>')
+def user_page(user_id):
+    if session['logged_in']:
+        current_user_id = connection.get_id_by_username(session['username'])
+        if current_user_id == user_id:
+            questions = data_manager.get_questions_by_user(user_id)
+        return None
 
 
 if __name__ == "__main__":
